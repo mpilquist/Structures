@@ -4,7 +4,7 @@ package object fundamentum {
 
   type Id[A] = A
 
-  implicit val IdInstance: Monad[Id] = new Monad[Id] with Comonad[Id] {
+  implicit val IdInstance: Monad[Id] = new Monad[Id] with Extract[Id] {
     def insert[A](a: A) = a
     def flatMap[A, B](fa: Id[A])(f: A => Id[B]) = f(fa)
     def extract[A](a: Id[A]) = a
