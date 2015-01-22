@@ -6,22 +6,41 @@ import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
 object FunctorLaws {
-  def apply[F[_], A](implicit F: Functor[F], Arb: Arbitrary[F[A]]): FunctorLaws[F, A] = new FunctorLaws[F, A] {
-    def functorF = F
-    def arbFA = Arb
+  def apply[F[_], A, B, C](implicit
+    typeClass: Functor[F],
+    arbFA: Arbitrary[F[A]],
+    arbAtoB: Arbitrary[A => B],
+    arbBtoA: Arbitrary[B => A],
+    arbBtoC: Arbitrary[B => C],
+    arbCtoB: Arbitrary[C => B]
+  ): FunctorLaws[F, A, B, C] = {
+    val typeClass0 = typeClass
+    val arbFA0 = arbFA
+    val arbAtoB0 = arbAtoB
+    val arbBtoA0 = arbBtoA
+    val arbBtoC0 = arbBtoC
+    val arbCtoB0 = arbCtoB
+    new FunctorLaws[F, A, B, C] {
+      def typeClass = typeClass0
+      def arbFA = arbFA0
+      def arbAtoB = arbAtoB0
+      def arbBtoA = arbBtoA0
+      def arbBtoC = arbBtoC0
+      def arbCtoB = arbCtoB0
+    }
   }
 }
 
-trait FunctorLaws[F[_], A] extends Laws {
+trait FunctorLaws[F[_], A, B, C] extends ExponentialLaws[F, A, B, C] {
 
-  implicit def functorF: Functor[F]
-  implicit def arbFA: Arbitrary[F[A]]
+  implicit def typeClass: Functor[F]
 
-  def functor[B, C](implicit arbAToB: Arbitrary[A => B], arbBToC: Arbitrary[B => C]) = new SimpleRuleSet(
+  def functor = new DefaultRuleSet(
     name = "functor",
+    parent = Some(exponential),
     props =
-      "identity" -> forAll { (fa: F[A]) => Functor[F].map(fa)(x => x) == fa },
-      "composition" -> forAll { (fa: F[A], f: A => B, g: B => C) =>
+      "covariant identity" -> forAll { (fa: F[A]) => Functor[F].map(fa)(x => x) == fa },
+      "covariant composition" -> forAll { (fa: F[A], f: A => B, g: B => C) =>
         Functor[F].map(Functor[F].map(fa)(f))(g) == Functor[F].map(fa)(f andThen g)
       }
   )
