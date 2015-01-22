@@ -3,7 +3,7 @@ package fundamentum
 import simulacrum.typeclass
 
 /**
- * Describes the class of type constructors that have both a monad and a universally quantifier monoid.
+ * Describes type constructors that have both a monad and a universally quantified monoid.
  *
  * Equivalently, this describes type constructors that have `MonadFilter` instances and additionally
  * define a universally quantified associative operation via the `append` method.
