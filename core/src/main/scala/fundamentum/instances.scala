@@ -19,7 +19,7 @@ package object instances {
     def insert[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f
     def empty[A] = None
-    def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = ???
+    def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = fa.fold(initial)(f(_, initial))
     def traverse[G[_]: Applicative, A, B](fa: Option[A])(f: A => G[B]): G[Option[B]] = {
       fa.fold(Applicative[G].insert(None: Option[B])) { a =>
         Applicative[G].map(f(a))(insert)
