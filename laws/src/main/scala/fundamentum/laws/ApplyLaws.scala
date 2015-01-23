@@ -6,8 +6,16 @@ import org.scalacheck.Prop._
 import org.typelevel.discipline.Laws
 
 object ApplyLaws {
-  def apply[F[_], A, B, C](implicit
-    typeClass: Apply[F],
+  def apply[F[_]: Apply]: ApplyLaws[F] = new ApplyLaws[F] {
+    def typeClass = Apply[F]
+  }
+}
+
+trait ApplyLaws[F[_]] extends FunctorLaws[F] {
+
+  implicit def typeClass: Apply[F]
+
+  def apply[A, B, C](implicit
     arbFA: Arbitrary[F[A]],
     arbAtoB: Arbitrary[A => B],
     arbBtoA: Arbitrary[B => A],
@@ -15,38 +23,9 @@ object ApplyLaws {
     arbCtoB: Arbitrary[C => B],
     arbFAtoB: Arbitrary[F[A => B]],
     arbFBtoC: Arbitrary[F[B => C]]
-  ): ApplyLaws[F, A, B, C] = {
-    val typeClass0 = typeClass
-    val arbFA0 = arbFA
-    val arbAtoB0 = arbAtoB
-    val arbBtoA0 = arbBtoA
-    val arbBtoC0 = arbBtoC
-    val arbCtoB0 = arbCtoB
-    val arbFAtoB0 = arbFAtoB
-    val arbFBtoC0 = arbFBtoC
-    new ApplyLaws[F, A, B, C] {
-      def typeClass = typeClass0
-      def arbFA = arbFA0
-      def arbAtoB = arbAtoB0
-      def arbBtoA = arbBtoA0
-      def arbBtoC = arbBtoC0
-      def arbCtoB = arbCtoB0
-      def arbFAtoB = arbFAtoB0
-      def arbFBtoC = arbFBtoC0
-    }
-  }
-}
-
-trait ApplyLaws[F[_], A, B, C] extends FunctorLaws[F, A, B, C] {
-
-  implicit def typeClass: Apply[F]
-
-  implicit def arbFAtoB: Arbitrary[F[A => B]]
-  implicit def arbFBtoC: Arbitrary[F[B => C]]
-
-  def apply = new DefaultRuleSet(
+  ): RuleSet = new DefaultRuleSet(
     name = "apply",
-    parent = Some(functor),
+    parent = Some(functor[A, B, C]),
     props =
       "apply associative composition" -> forAll { (fa: F[A], fab: F[A => B], fbc: F[B => C]) =>
         typeClass.apply(typeClass.apply(fa)(fab))(fbc) ==
