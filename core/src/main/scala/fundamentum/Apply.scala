@@ -16,7 +16,7 @@ import simulacrum.{ typeclass, noop }
  */
 @typeclass trait Apply[F[_]] extends Functor[F] {
 
-  @noop def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
+  def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
 
 
   @noop def apply2[A, B, X](fa: F[A], fb: F[B])(f: F[(A, B) => X]): F[X] =

@@ -13,6 +13,8 @@ object ApplyLaws {
 
 trait ApplyLaws[F[_]] extends FunctorLaws[F] {
 
+  import Apply.Adapter
+
   implicit def typeClass: Apply[F]
 
   def apply[A, B, C](implicit
@@ -28,8 +30,7 @@ trait ApplyLaws[F[_]] extends FunctorLaws[F] {
     parent = Some(functor[A, B, C]),
     props =
       "apply associative composition" -> forAll { (fa: F[A], fab: F[A => B], fbc: F[B => C]) =>
-        typeClass.apply(typeClass.apply(fa)(fab))(fbc) ==
-          typeClass.apply(fa)(typeClass.apply(fab)(typeClass.map(fbc)((bc: B => C) => (ab: A => B) => ab andThen bc)))
+        fa.apply(fab).apply(fbc) == fa.apply(fab.apply(fbc.map((bc: B => C) => (ab: A => B) => ab andThen bc)))
       }
   )
 }

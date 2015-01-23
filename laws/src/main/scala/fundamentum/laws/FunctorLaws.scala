@@ -13,6 +13,8 @@ object FunctorLaws {
 
 trait FunctorLaws[F[_]] extends ExponentialLaws[F] {
 
+  import Functor.Adapter
+
   implicit def typeClass: Functor[F]
 
   def functor[A, B, C](implicit
@@ -25,9 +27,11 @@ trait FunctorLaws[F[_]] extends ExponentialLaws[F] {
     name = "functor",
     parent = Some(exponential[A, B, C]),
     props =
-      "covariant identity" -> forAll { (fa: F[A]) => Functor[F].map(fa)(x => x) == fa },
+      "covariant identity" -> forAll { (fa: F[A]) =>
+        fa.map(identity) == fa
+      },
       "covariant composition" -> forAll { (fa: F[A], f: A => B, g: B => C) =>
-        Functor[F].map(Functor[F].map(fa)(f))(g) == Functor[F].map(fa)(f andThen g)
+        fa.map(f).map(g) == fa.map(f andThen g)
       }
   )
 }
