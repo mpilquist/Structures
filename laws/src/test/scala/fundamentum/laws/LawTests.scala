@@ -7,6 +7,6 @@ import org.scalatest.FunSuite
 import fundamentum.instances._
 
 class LawTests extends FunSuite with Discipline {
-  checkAll("List", ApplyLaws[List].apply)
-  checkAll("Option", ApplyLaws[Option].apply)
+  checkAll("List", ApplicativeLaws[List].applicative)
+  checkAll("Option", ApplicativeLaws[Option].applicative)
 }
