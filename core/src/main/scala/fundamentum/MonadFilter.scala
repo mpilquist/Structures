@@ -4,8 +4,7 @@ import simulacrum.typeclass
 
 /**
  * Monad that defines one additional abstract method, `empty`, such that:
- *  - for all `A` and all `f: A => A`, `map(empty)(f) == empty`
- *  - for all `A`, given `fa: F[A]`, `flatMap(empty)(_ => fa) == empty`
+ *  - for all `A`, `fa: F[A]`, `flatMap(empty)(_ => fa) == empty`
  *
  * This gives rise the the `filter` method and its variants.
  */
