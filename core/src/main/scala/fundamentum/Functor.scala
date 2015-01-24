@@ -29,4 +29,11 @@ import simulacrum.typeclass
   /** Replaces the `A` value in `F[A]` with the supplied value. */
   def as[A, B](fa: F[A], b: B): F[B] =
     map(fa)(_ => b)
+
+  /**
+   * Maps the supplied function over `F[A]`, returning the original value
+   * and the result of the function application.
+   */
+  def zipWith[A, B](fa: F[A])(f: A => B): F[(A, B)] =
+    map(fa)(a => (a, f(a)))
 }
