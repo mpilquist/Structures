@@ -12,7 +12,7 @@ import simulacrum.{ typeclass, noop }
  * single `F[A => C]` and then applying that to `F[A]`.
  *
  * This type class models a more general version of an [[Applicative]] -- specifically, there's
- * no requirement for the `insert` method to exist.
+ * no requirement for the `pure` method to exist.
  */
 @typeclass trait Apply[F[_]] extends Functor[F] {
 

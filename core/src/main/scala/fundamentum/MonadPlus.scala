@@ -11,6 +11,6 @@ import simulacrum.typeclass
 @typeclass trait MonadPlus[F[_]] extends MonadFilter[F] with PlusEmpty[F] {
 
   def unite[G[_], A](fga: F[G[A]])(implicit G: Foldable[G]): F[A] =
-    flatMap(fga)(ga => G.foldLeft(ga, empty[A])((acc, a) => plus(acc, insert(a))))
+    flatMap(fga)(ga => G.foldLeft(ga, empty[A])((acc, a) => plus(acc, pure(a))))
 }
 

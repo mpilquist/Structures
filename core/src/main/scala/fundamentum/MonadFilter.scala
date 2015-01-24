@@ -13,9 +13,9 @@ import simulacrum.typeclass
   def empty[A]: F[A]
 
   def filter[A](fa: F[A])(f: A => Boolean) =
-    flatMap(fa)(a => if (f(a)) insert(a) else empty[A])
+    flatMap(fa)(a => if (f(a)) pure(a) else empty[A])
 
   def filterM[A](fa: F[A])(f: A => F[Boolean]) =
-    flatMap(fa)(a => flatMap(f(a))(b => if (b) insert(a) else empty[A]))
+    flatMap(fa)(a => flatMap(f(a))(b => if (b) pure(a) else empty[A]))
 }
 
