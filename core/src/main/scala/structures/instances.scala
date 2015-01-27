@@ -1,4 +1,4 @@
-package fundamentum
+package structures
 
 package object instances {
 

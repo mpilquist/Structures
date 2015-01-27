@@ -1,4 +1,4 @@
-package object fundamentum {
+package object structures {
 
   type ~>[F[_], G[_]] = NatrualTransformation[F, G]
 

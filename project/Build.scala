@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 
-object FundamentumBuild extends Build {
+object StructuresBuild extends Build {
 
   lazy val commonSettings = Seq(
     organization := "com.github.mpilquist",
@@ -25,8 +25,8 @@ object FundamentumBuild extends Build {
     testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oD"),
     resolvers += "Sonatype Public" at "https://oss.sonatype.org/content/groups/public/",
     initialCommands += """
-      import fundamentum._
-      import fundamentum.instances._
+      import structures._
+      import structures.instances._
     """
   )
 
@@ -37,7 +37,7 @@ object FundamentumBuild extends Build {
   lazy val core = project.settings().
     settings(commonSettings: _*).
     settings(
-      name := "fundamentum-core",
+      name := "structures-core",
       libraryDependencies ++= Seq(
         "com.github.mpilquist" %% "simulacrum" % "0.1.0-SNAPSHOT" % "optional",
         "org.scalatest" %% "scalatest" % "2.2.3" % "test"
@@ -48,7 +48,7 @@ object FundamentumBuild extends Build {
   lazy val laws = project.dependsOn(core).
     settings(commonSettings: _*).
     settings(
-      name := "fundamentum-laws",
+      name := "structures-laws",
       libraryDependencies ++= Seq(
         "org.scalacheck" %% "scalacheck" % "1.11.3",
         "org.typelevel" %% "discipline" % "0.2.1",

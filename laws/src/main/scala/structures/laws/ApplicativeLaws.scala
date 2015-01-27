@@ -1,4 +1,4 @@
-package fundamentum
+package structures
 package laws
 
 import org.scalacheck.Arbitrary

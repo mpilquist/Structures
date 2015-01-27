@@ -1,4 +1,4 @@
-package fundamentum
+package structures
 
 import simulacrum.typeclass
 

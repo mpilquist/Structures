@@ -1,4 +1,4 @@
-name := "fundamentum-laws"
+name := "structures-laws"
 
 libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.11.3",
