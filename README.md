@@ -1,6 +1,8 @@
 fundamentum
 ===========
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mpilquist/Structures?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Fundamentum is a zero-dependency Scala library that defines commonly used type classes for functional programming.
 
 There are two modules, core and laws. The former provides the API of the library and the latter provides [Discipline](http://github.com/typelevel/discipline) based laws for each of the type classes. The laws project is intended to be used in test scope, to verify that instances of the type classes are law abiding.
