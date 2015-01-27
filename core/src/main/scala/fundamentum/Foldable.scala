@@ -7,6 +7,15 @@ import simulacrum.typeclass
   def foldLeft[A, B](fa: F[A], initial: B)(f: (B, A) => B): B
 
   def foldRight[A, B](fa: F[A], initial: B)(f: (A, B) => B): B
+
+  def traverse_[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[Unit] =
+    foldLeft(fa, Applicative[G].pure(()))((acc, a) => Applicative[G].map2(acc, f(a))((_, _) => ()))
+
+  def sequence_[G[_]: Applicative, A, B](fga: F[G[A]]): G[Unit] =
+    traverse_(fga)(identity)
+
+  def psum[G[_]: PlusEmpty, A](fga: F[G[A]]): G[A] =
+    foldLeft(fga, PlusEmpty[G].empty[A])((acc, ga) => PlusEmpty[G].plus(acc, ga))
 }
 
 @typeclass trait Foldable1[F[_]] extends Foldable[F] {
