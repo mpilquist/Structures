@@ -1,6 +1,6 @@
 package object structures {
 
-  type ~>[F[_], G[_]] = NatrualTransformation[F, G]
+  type ~>[F[_], G[_]] = NaturalTransformation[F, G]
 
   type Id[A] = A
 
