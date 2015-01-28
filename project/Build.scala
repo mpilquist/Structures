@@ -26,7 +26,7 @@ object StructuresBuild extends Build {
     resolvers += "Sonatype Public" at "https://oss.sonatype.org/content/groups/public/",
     initialCommands += """
       import structures._
-      import structures.instances._
+      import structures.std._
     """
   )
 

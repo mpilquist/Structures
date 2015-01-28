@@ -1,6 +1,6 @@
 package structures
 
-package object instances {
+package object std {
 
   implicit val list: MonadPlus[List] with Traverse[List] = new MonadPlus[List] with Traverse[List] {
     def pure[A](a: A) = List(a)
@@ -28,5 +28,21 @@ package object instances {
         Applicative[G].map(f(a))(pure)
       }
     }
+  }
+
+  implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = new Monoid[Option[A]] {
+    def id = None
+    def append(x: Option[A], y: => Option[A]) = x match {
+      case None => y
+      case sx @ Some(xx) => y match {
+        case None => sx
+        case Some(yy) => Some(Semigroup[A].append(xx, yy))
+      }
+    }
+  }
+
+  implicit val intMonoid: Monoid[Int] = new Monoid[Int] {
+    def id = 0
+    def append(x: Int, y: => Int) = x + y
   }
 }
