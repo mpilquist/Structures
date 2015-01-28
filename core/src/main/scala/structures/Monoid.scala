@@ -8,5 +8,14 @@ import simulacrum.typeclass
 
 object Monoid {
 
+  def instance[A](id: A)(append: (A, => A) => A): Monoid[A] = {
+    val id0 = id
+    val append0 = append
+    new Monoid[A] {
+      def id = id0
+      def append(x: A, y: => A) = append0(x, y)
+    }
+  }
+
   implicit def fromPlusEmpty[F[_], A](implicit p: PlusEmpty[F]): Monoid[F[A]] = p.toMonoid
 }

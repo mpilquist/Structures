@@ -2,19 +2,14 @@ package structures
 
 package object std {
 
-  implicit val list: MonadPlus[List] with Traverse[List] = new MonadPlus[List] with Traverse[List] {
-    def pure[A](a: A) = List(a)
-    def flatMap[A, B](fa: List[A])(f: A => List[B]) = fa flatMap f
-    def empty[A] = Nil
-    def plus[A](x: List[A], y: => List[A]) = x ++ y
-    def foldLeft[A, B](fa: List[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
-    def foldRight[A, B](fa: List[A], initial: B)(f: (A, B) => B) = fa.foldRight(initial)(f)
-    def traverse[G[_]: Applicative, A, B](fa: List[A])(f: A => G[B]): G[List[B]] = {
-      fa.reverse.foldLeft(Applicative[G].pure(Nil: List[B])) { (acc, a) =>
-        Applicative[G].map2(f(a), acc)(_ :: _)
-      }
-    }
-  }
+  implicit val byteMonoid: Monoid[Byte] = Monoid.instance(0: Byte)((x, y) => (x + y).toByte)
+  implicit val shortMonoid: Monoid[Short] = Monoid.instance(0: Short)((x, y) => (x + y).toShort)
+  implicit val intMonoid: Monoid[Int] = Monoid.instance(0)(_ + _)
+  implicit val longMonoid: Monoid[Long] = Monoid.instance(0L)(_ + _)
+  implicit val stringMonoid: Monoid[String] = Monoid.instance("")(_ + _)
+
+  implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = Monoid.instance(None: Option[A])((x, y) =>
+    x.fold(y)(xx => y.fold(Some(xx))(yy => Some(Semigroup[A].append(xx, yy)))))
 
   implicit val option: MonadPlus[Option] with Traverse[Option] = new MonadPlus[Option] with Traverse[Option] {
     def pure[A](a: A) = Some(a)
@@ -30,19 +25,21 @@ package object std {
     }
   }
 
-  implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = new Monoid[Option[A]] {
-    def id = None
-    def append(x: Option[A], y: => Option[A]) = x match {
-      case None => y
-      case sx @ Some(xx) => y match {
-        case None => sx
-        case Some(yy) => Some(Semigroup[A].append(xx, yy))
+  implicit val list: MonadPlus[List] with Traverse[List] = new MonadPlus[List] with Traverse[List] {
+    def pure[A](a: A) = List(a)
+    def flatMap[A, B](fa: List[A])(f: A => List[B]) = fa flatMap f
+    def empty[A] = Nil
+    def plus[A](x: List[A], y: => List[A]) = x ++ y
+    def foldLeft[A, B](fa: List[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
+    def foldRight[A, B](fa: List[A], initial: B)(f: (A, B) => B) = fa.foldRight(initial)(f)
+    def traverse[G[_]: Applicative, A, B](fa: List[A])(f: A => G[B]): G[List[B]] = {
+      fa.reverse.foldLeft(Applicative[G].pure(Nil: List[B])) { (acc, a) =>
+        Applicative[G].map2(f(a), acc)(_ :: _)
       }
     }
   }
 
-  implicit val intMonoid: Monoid[Int] = new Monoid[Int] {
-    def id = 0
-    def append(x: Int, y: => Int) = x + y
+  implicit def mapMonoid[K, V: Semigroup]: Monoid[Map[K, V]] = Monoid.instance(Map.empty[K, V]) { (x, y) =>
+    y.foldLeft(x) { case (acc, (k, v)) => acc.updated(k, (acc.get(k).fold(v)(xv => Semigroup[V].append(xv, v)))) }
   }
 }
