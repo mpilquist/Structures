@@ -3,9 +3,8 @@ package structures
 import simulacrum.typeclass
 
 /**
- * Describes type constructors that support the `xmap` method such that:
- *  - `xmap(fa)(identity, identity) == fa`
- *  - `xmap(xmap(fa)(f1, f2))(g1, g2) == xmap(fa)(f1 andThen g1, g2 andThen f2)`
+ * Type class that describes type constructors that support an `xmap` method which adheres
+ * to the laws described in [[structures.laws.ExponentialLaws]].
  *
  * The name is short for "exponential functor", which is also known as "invariant functor".
  */

@@ -3,9 +3,8 @@ package structures
 import simulacrum.typeclass
 
 /**
- * Describes type constructors that support the `map` method such that:
- *  - `map(fa)(identity) == fa`
- *  - `map(map(fa)(f))(g) == xmap(fa)(f andThen g)`
+ * Type class that describes type constructors that support a `map` method which adheres
+ * to the laws described in [[structures.laws.FunctorLaws]].
  *
  * The name is short for "covariant functor".
  *

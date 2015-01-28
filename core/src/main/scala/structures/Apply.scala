@@ -3,13 +3,8 @@ package structures
 import simulacrum.{ typeclass, noop }
 
 /**
- * Describes type constructors that are functors and that support the `apply` method such that:
- *  - given `fa: F[A]`, `fab: F[A => B]`, and `fac: F[A => C]`,
- *    `apply(apply(fa)(fab))(fbc) == apply(fa)(apply(fab)(map(fbc)(bc => ab => ab andThen bc)))`
- *
- * This property states that the result of first applying a `F[A => B]` followed by applying a
- * `F[B => C]` must yield the same result as combining the `F[A => B]` and `F[B => C]` in to a
- * single `F[A => C]` and then applying that to `F[A]`.
+ * Type class that describes functors that support an `apply` method which adheres
+ * to the laws described in [[structures.laws.ApplyLaws]].
  *
  * This type class models a more general version of an [[Applicative]] -- specifically, there's
  * no requirement for the `pure` method to exist.
@@ -17,6 +12,9 @@ import simulacrum.{ typeclass, noop }
 @typeclass trait Apply[F[_]] extends Functor[F] {
 
   def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
+
+  @noop def flip[A, B](f: F[A => B]): F[A] => F[B] =
+    fa => apply(fa)(f)
 
 
   @noop def apply2[A, B, X](fa: F[A], fb: F[B])(f: F[(A, B) => X]): F[X] =
