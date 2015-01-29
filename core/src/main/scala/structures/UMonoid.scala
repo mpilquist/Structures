@@ -5,7 +5,7 @@ import simulacrum.typeclass
 /**
  * Type class that describes type constructors which can provide a `Monoid[F[A]]` for any type `A`.
  */
-@typeclass trait UMonoid[F[_]] extends USemigroup[F] { self =>
+@typeclass trait UMonoid[F[_]] extends Any with USemigroup[F] { self =>
 
   def empty[A]: F[A]
 

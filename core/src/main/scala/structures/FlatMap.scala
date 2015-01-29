@@ -2,7 +2,7 @@ package structures
 
 import simulacrum.{ noop, op, typeclass }
 
-@typeclass trait FlatMap[F[_]] extends Apply[F] {
+@typeclass trait FlatMap[F[_]] extends Any with Apply[F] {
 
   @op(">>=", alias = true)
   def flatMap[A, B](fa: F[A])(f: A => F[B]): F[B]

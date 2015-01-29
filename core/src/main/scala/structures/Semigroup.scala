@@ -2,7 +2,7 @@ package structures
 
 import simulacrum.{ typeclass, op }
 
-@typeclass trait Semigroup[A] {
+@typeclass trait Semigroup[A] extends Any {
   @op("|+|") def append(x: A, y: => A): A
 }
 

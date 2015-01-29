@@ -11,7 +11,7 @@ import simulacrum.typeclass
  *
  * @see http://strictlypositive.org/IdiomLite.pdf
  */
-@typeclass trait Applicative[F[_]] extends Apply[F] with Functor[F] {
+@typeclass trait Applicative[F[_]] extends Any with Apply[F] with Functor[F] {
 
   def pure[A](a: A): F[A]
 

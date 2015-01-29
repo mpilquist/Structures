@@ -2,7 +2,7 @@ package structures
 
 import simulacrum.typeclass
 
-@typeclass trait Monoid[A] extends Semigroup[A] {
+@typeclass trait Monoid[A] extends Any with Semigroup[A] {
   def empty: A
 }
 

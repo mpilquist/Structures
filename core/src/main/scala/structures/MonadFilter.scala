@@ -8,7 +8,7 @@ import simulacrum.typeclass
  *
  * This gives rise the the `filter` method and its variants.
  */
-@typeclass trait MonadFilter[F[_]] extends Monad[F] {
+@typeclass trait MonadFilter[F[_]] extends Any with Monad[F] {
 
   def empty[A]: F[A]
 

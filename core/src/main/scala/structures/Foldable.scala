@@ -2,7 +2,7 @@ package structures
 
 import simulacrum.typeclass
 
-@typeclass trait Foldable[F[_]] {
+@typeclass trait Foldable[F[_]] extends Any {
 
   def foldLeft[A, B](fa: F[A], initial: B)(f: (B, A) => B): B
 
@@ -24,7 +24,7 @@ import simulacrum.typeclass
     foldLeft(fga, UMonoid[G].empty[A])((acc, ga) => UMonoid[G].append(acc, ga))
 }
 
-@typeclass trait Foldable1[F[_]] extends Foldable[F] {
+@typeclass trait Foldable1[F[_]] extends Any with Foldable[F] {
 
   def foldLeft1[A, B](fa: F[A])(initial: A => B)(f: (B, A) => B): B
 

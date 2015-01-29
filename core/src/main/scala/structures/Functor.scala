@@ -11,7 +11,7 @@ import simulacrum.typeclass
  * Note that every functor is an exponential functor, where `xmap` is implemented in
  * terms of `map` by ignoring the `B => A` function.
  */
-@typeclass trait Functor[F[_]] extends Exponential[F] {
+@typeclass trait Functor[F[_]] extends Any with Exponential[F] {
 
   /**
    * Converts the supplied `F[A]` in to an `F[B]` using the supplied `A => B`.

@@ -2,7 +2,7 @@ package structures
 
 import simulacrum.typeclass
 
-@typeclass trait Traverse[F[_]] extends Foldable[F] {
+@typeclass trait Traverse[F[_]] extends Any with Foldable[F] {
 
   def traverse[G[_]: Applicative, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
 
@@ -10,7 +10,7 @@ import simulacrum.typeclass
     traverse(fa)(identity)
 }
 
-@typeclass trait Traverse1[F[_]] extends Foldable1[F] {
+@typeclass trait Traverse1[F[_]] extends Any with Foldable1[F] {
 
   def traverse1[G[_]: Apply, A, B](fa: F[A])(f: A => G[B]): G[F[B]]
 

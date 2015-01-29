@@ -8,7 +8,7 @@ import simulacrum.typeclass
  *
  * The name is short for "exponential functor", which is also known as "invariant functor".
  */
-@typeclass trait Exponential[F[_]] {
+@typeclass trait Exponential[F[_]] extends Any {
 
   /**
    * Converts the supplied `F[A]` to an `F[B]` using a pair of functions -- `A => B` and `B => A`.

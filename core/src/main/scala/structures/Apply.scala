@@ -9,7 +9,7 @@ import simulacrum.{ typeclass, noop }
  * This type class models a more general version of an [[Applicative]] -- specifically, there's
  * no requirement for the `pure` method to exist.
  */
-@typeclass trait Apply[F[_]] extends Functor[F] {
+@typeclass trait Apply[F[_]] extends Any with Functor[F] {
 
   def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
 
