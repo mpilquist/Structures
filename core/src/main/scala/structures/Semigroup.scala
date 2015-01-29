@@ -15,5 +15,5 @@ object Semigroup {
     }
   }
 
-  implicit def fromPlus[F[_], A](implicit p: Plus[F]): Semigroup[F[A]] = p.toSemigroup
+  implicit def fromUSemigroup[F[_], A](implicit p: USemigroup[F]): Semigroup[F[A]] = p.toSemigroup
 }

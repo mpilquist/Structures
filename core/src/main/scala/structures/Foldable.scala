@@ -20,8 +20,8 @@ import simulacrum.typeclass
   def sequence_[G[_]: Applicative, A, B](fga: F[G[A]]): G[Unit] =
     traverse_(fga)(identity)
 
-  def psum[G[_]: PlusEmpty, A](fga: F[G[A]]): G[A] =
-    foldLeft(fga, PlusEmpty[G].empty[A])((acc, ga) => PlusEmpty[G].plus(acc, ga))
+  def psum[G[_]: UMonoid, A](fga: F[G[A]]): G[A] =
+    foldLeft(fga, UMonoid[G].id[A])((acc, ga) => UMonoid[G].append(acc, ga))
 }
 
 @typeclass trait Foldable1[F[_]] extends Foldable[F] {

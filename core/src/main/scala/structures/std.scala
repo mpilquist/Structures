@@ -11,11 +11,11 @@ package object std {
   implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = Monoid.instance(None: Option[A])((x, y) =>
     x.fold(y)(xx => y.fold(Some(xx))(yy => Some(Semigroup[A].append(xx, yy)))))
 
-  implicit val option: MonadPlus[Option] with Traverse[Option] = new MonadPlus[Option] with Traverse[Option] {
+  implicit val option: MonadAppend[Option] with Traverse[Option] = new MonadAppend[Option] with Traverse[Option] {
     def pure[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f
-    def empty[A] = None
-    def plus[A](fa: Option[A], fb: => Option[A]) = fa // invalid definition, let tests drive this fix though
+    def id[A] = None
+    def append[A](fa: Option[A], fb: => Option[A]) = fa // invalid definition, let tests drive this fix though
     def foldLeft[A, B](fa: Option[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = fa.fold(initial)(f(_, initial))
     def traverse[G[_]: Applicative, A, B](fa: Option[A])(f: A => G[B]): G[Option[B]] = {
@@ -25,11 +25,11 @@ package object std {
     }
   }
 
-  implicit val list: MonadPlus[List] with Traverse[List] = new MonadPlus[List] with Traverse[List] {
+  implicit val list: MonadAppend[List] with Traverse[List] = new MonadAppend[List] with Traverse[List] {
     def pure[A](a: A) = List(a)
     def flatMap[A, B](fa: List[A])(f: A => List[B]) = fa flatMap f
-    def empty[A] = Nil
-    def plus[A](x: List[A], y: => List[A]) = x ++ y
+    def id[A] = Nil
+    def append[A](x: List[A], y: => List[A]) = x ++ y
     def foldLeft[A, B](fa: List[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: List[A], initial: B)(f: (A, B) => B) = fa.foldRight(initial)(f)
     def traverse[G[_]: Applicative, A, B](fa: List[A])(f: A => G[B]): G[List[B]] = {

@@ -17,5 +17,5 @@ object Monoid {
     }
   }
 
-  implicit def fromPlusEmpty[F[_], A](implicit p: PlusEmpty[F]): Monoid[F[A]] = p.toMonoid
+  implicit def fromUMonoid[F[_], A](implicit p: UMonoid[F]): Monoid[F[A]] = p.toMonoid
 }
