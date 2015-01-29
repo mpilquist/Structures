@@ -15,7 +15,7 @@ package object std {
     def pure[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f
     def empty[A] = None
-    def plus[A](fa: Option[A], fb: => Option[A]) = fa
+    def plus[A](fa: Option[A], fb: => Option[A]) = fa // invalid definition, let tests drive this fix though
     def foldLeft[A, B](fa: Option[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = fa.fold(initial)(f(_, initial))
     def traverse[G[_]: Applicative, A, B](fa: Option[A])(f: A => G[B]): G[Option[B]] = {
@@ -46,5 +46,15 @@ package object std {
   implicit def map[K]: Apply[Map[K, ?]] = new Apply[Map[K, ?]] {
     def map[A, B](fa: Map[K, A])(f: A => B) = fa.map { case (k, v) => (k, f(v)) }
     def apply[A, B](fa: Map[K, A])(f: Map[K, A => B]) = fa.flatMap { case (k, v) => f.get(k).map { fab => Map(k -> fab(v)) }.getOrElse(Map.empty) }
+  }
+
+  implicit def either[L]: Monad[Either[L, ?]] with Traverse[Either[L, ?]] = new Monad[Either[L, ?]] with Traverse[Either[L, ?]] {
+    def pure[A](a: A) = Right(a)
+    def flatMap[A, B](fa: Either[L, A])(f: A => Either[L, B]) = fa.right.flatMap(f)
+    def foldLeft[A, B](fa: Either[L, A], initial: B)(f: (B, A) => B) = fa.fold(_ => initial, a => f(initial, a))
+    def foldRight[A, B](fa: Either[L, A], initial: B)(f: (A, B) => B) = fa.fold(_ => initial, a => f(a, initial))
+    def traverse[G[_]: Applicative, A, B](fa: Either[L, A])(f: A => G[B]): G[Either[L, B]] = {
+      fa.right.map(f).fold(l => Applicative[G].pure(Left(l)), gb => Applicative[G].map(gb)(b => Right(b)))
+    }
   }
 }
