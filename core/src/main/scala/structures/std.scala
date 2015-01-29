@@ -14,7 +14,7 @@ package object std {
   implicit val option: MonadAppend[Option] with Traverse[Option] = new MonadAppend[Option] with Traverse[Option] {
     def pure[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f
-    def id[A] = None
+    def empty[A] = None
     def append[A](fa: Option[A], fb: => Option[A]) = fa // invalid definition, let tests drive this fix though
     def foldLeft[A, B](fa: Option[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = fa.fold(initial)(f(_, initial))
@@ -28,7 +28,7 @@ package object std {
   implicit val list: MonadAppend[List] with Traverse[List] = new MonadAppend[List] with Traverse[List] {
     def pure[A](a: A) = List(a)
     def flatMap[A, B](fa: List[A])(f: A => List[B]) = fa flatMap f
-    def id[A] = Nil
+    def empty[A] = Nil
     def append[A](x: List[A], y: => List[A]) = x ++ y
     def foldLeft[A, B](fa: List[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: List[A], initial: B)(f: (A, B) => B) = fa.foldRight(initial)(f)

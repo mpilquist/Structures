@@ -3,16 +3,16 @@ package structures
 import simulacrum.typeclass
 
 @typeclass trait Monoid[A] extends Semigroup[A] {
-  def id: A
+  def empty: A
 }
 
 object Monoid {
 
-  def instance[A](id: A)(append: (A, => A) => A): Monoid[A] = {
-    val id0 = id
+  def instance[A](empty: A)(append: (A, => A) => A): Monoid[A] = {
+    val empty0 = empty
     val append0 = append
     new Monoid[A] {
-      def id = id0
+      def empty = empty0
       def append(x: A, y: => A) = append0(x, y)
     }
   }

@@ -9,7 +9,7 @@ import simulacrum.typeclass
   def foldRight[A, B](fa: F[A], initial: B)(f: (A, B) => B): B
 
   def foldMap[A, B](fa: F[A])(f: A => B)(implicit mb: Monoid[B]): B =
-    foldLeft(fa, mb.id)((b, a) => mb.append(b, f(a)))
+    foldLeft(fa, mb.empty)((b, a) => mb.append(b, f(a)))
 
   def fold[A: Monoid](fa: F[A]): A =
     foldMap(fa)(identity)
@@ -21,7 +21,7 @@ import simulacrum.typeclass
     traverse_(fga)(identity)
 
   def psum[G[_]: UMonoid, A](fga: F[G[A]]): G[A] =
-    foldLeft(fga, UMonoid[G].id[A])((acc, ga) => UMonoid[G].append(acc, ga))
+    foldLeft(fga, UMonoid[G].empty[A])((acc, ga) => UMonoid[G].append(acc, ga))
 }
 
 @typeclass trait Foldable1[F[_]] extends Foldable[F] {
