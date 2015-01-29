@@ -1,7 +1,5 @@
 package object structures {
 
-  type ~>[F[_], G[_]] = NaturalTransformation[F, G]
-
   type Id[A] = A
 
   implicit val IdInstance: Monad[Id] = new Monad[Id] with Extract[Id] {
