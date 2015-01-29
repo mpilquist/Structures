@@ -28,9 +28,13 @@ Structures aims to be a small, stable library, with binary incompatible releases
 
 ### Will this force library authors to choose between Scalaz and Structures?
 
-Structures is an experiment. It is focused on minimizing the number of type classes and integrating them closely with Scala language features and the standard library. It is entirely possible that this experiment fails in the sense that it no longer should exist as a library. In which case, the overall effort would still be valuable by demonstrating why a smaller subset of type classes using strict evaluation is not useful.
+Structures is an experiment. It is focused on minimizing the number of type classes and integrating them closely with Scala language features and the standard library. It is entirely possible that this experiment fails in the sense that it no longer should exist as a library. In which case, the overall effort would still be valuable by demonstrating why a smaller subset of type classes is not useful.
 
-To be clear, in its current form, Structures is not intended to be used in libraries.
+### OK, but what about cats?
+
+The [Typelevel cats project](http://github.com/non/cats) is similar in many ways to Structures. However, cats is more ambitious in what it is attempting. Eventually, cats will grow in to a number of modules that together have similar scope to Scalaz. The focus of Structures is to provide a minimal subset of common FP type classes. As an example of how this goal results in differences, cats will likely include something like [Scalaz's `Unapply` syntax](http://typelevel.org/blog/2013/09/11/using-scalaz-Unapply.html), whereas that is out of scope for Structures.
+
+In short, we believe that there is room for multiple libraries in this space.
 
 ## Acknowledgements
 
@@ -39,5 +43,6 @@ This project is influenced by a number of other projects. Notably:
  - [Scalaz](http://github.com/scalaz/scalaz)
  - [Functional Programming in Scala](http://www.manning.com/bjarnason/)
  - [Ed Kmett's semigroupoids](https://hackage.haskell.org/package/semigroupoids)
+ - [Typelevel cats](http://github.com/non/cats)
 
 This project is also influenced by a number of individuals, who will be added here with their agreement.
