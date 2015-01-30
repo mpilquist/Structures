@@ -29,11 +29,6 @@ import simulacrum.typeclass
   def lift[A, B](f: A => B): F[A] => F[B] =
     fa => map(fa)(f)
 
-  /**
-    * Tuple the values in fa with the result of applying a function
-    * with the value */
-  def fproduct[A,B](fa: F[A])(f: A => B): F[(A,B)] = map(fa)(a => a -> f(a))
-
   /** Replaces the `A` value in `F[A]` with the supplied value. */
   def as[A, B](fa: F[A], b: B): F[B] =
     map(fa)(_ => b)
