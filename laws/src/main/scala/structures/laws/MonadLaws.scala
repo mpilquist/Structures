@@ -11,7 +11,7 @@ object MonadLaws {
   }
 }
 
-trait MonadLaws[F[_]] extends ApplicativeLaws[F] {
+trait MonadLaws[F[_]] extends FlatMapLaws[F] with ApplicativeLaws[F] {
 
   import Monad.Adapter
 
@@ -31,9 +31,6 @@ trait MonadLaws[F[_]] extends ApplicativeLaws[F] {
       },
       "monad right identity" -> forAll { (fa: F[A]) =>
         fa.flatMap { a => pure(a) } == fa
-      },
-      "monad associativity" -> forAll { (fa: F[A], f: A => F[B], g: B => F[C]) =>
-        fa.flatMap(f).flatMap(g) == fa.flatMap { a => f(a).flatMap(g) }
       }
     )
   }
@@ -42,12 +39,12 @@ trait MonadLaws[F[_]] extends ApplicativeLaws[F] {
     arbFInt: Arbitrary[F[Int]],
     arbIntToFString: Arbitrary[Int => F[String]],
     arbStringToFLong: Arbitrary[String => F[Long]],
-    arbFIntToString: Arbitrary[F[Int => String]], 
+    arbFIntToString: Arbitrary[F[Int => String]],
     arbFStringToLong: Arbitrary[F[String => Long]]
   ): RuleSet = new RuleSet {
     def name = "monad"
     def bases = Nil
-    def parents = Seq(applicative)
+    def parents = Seq(flatMap, applicative)
     def props = monadProperties[Int, String, Long]
   }
 }
