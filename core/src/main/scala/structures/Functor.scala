@@ -50,9 +50,9 @@ import simulacrum.typeclass
     * Functor on G[F[_]], with a map method which uses an A => B to
     * map a G[F[A]] to a G[F[B]].
     */
-  def compose[G[_]: Functor]: Functor[({type λ[α] = F[G[α]]})#λ] =
-    new Functor[({type λ[α] = F[G[α]]})#λ] {
-      override def map[A, B](fa: F[G[A]])(f: A => B): F[G[B]] = 
+  def compose[G[_]: Functor]: Functor[Lambda[X => F[G[X]]]] =
+    new Functor[Lambda[X => F[G[X]]]] {
+      override def map[A, B](fa: F[G[A]])(f: A => B): F[G[B]] =
         self.map(fa)(Functor[G].lift(f))
     }
 }
