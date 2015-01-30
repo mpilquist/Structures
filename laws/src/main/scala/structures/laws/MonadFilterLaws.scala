@@ -17,11 +17,9 @@ trait MonadFilterLaws[F[_]] extends MonadLaws[F] {
 
   implicit def typeClass: MonadFilter[F]
 
-  def monadFilterProperties[A, B, C](implicit
-    arbA: Arbitrary[A],
+  def monadFilterProperties[A, B](implicit
     arbAtoFB: Arbitrary[A => F[B]],
-    arbFA: Arbitrary[F[A]],
-    arbBtoFC: Arbitrary[B => F[C]]
+    arbFA: Arbitrary[F[A]]
   ) = {
     val F = MonadFilter[F]
     import F._
@@ -36,8 +34,8 @@ trait MonadFilterLaws[F[_]] extends MonadLaws[F] {
   }
 
   def monadFilter(implicit
-    arbFInt: Arbitrary[F[Int]],
     arbIntToFString: Arbitrary[Int => F[String]],
+    arbFInt: Arbitrary[F[Int]],
     arbStringToFLong: Arbitrary[String => F[Long]],
     arbFIntToString: Arbitrary[F[Int => String]],
     arbFStringToLong: Arbitrary[F[String => Long]]
@@ -45,7 +43,7 @@ trait MonadFilterLaws[F[_]] extends MonadLaws[F] {
     def name = "monad fitler"
     def bases = Nil
     def parents = Seq(monad)
-    def props = monadFilterProperties[Int, String, Long]
+    def props = monadFilterProperties[Int, String]
   }
 }
 
