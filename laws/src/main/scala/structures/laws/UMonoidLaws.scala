@@ -20,8 +20,8 @@ trait UMonoidLaws[F[_]] extends USemigroupLaws[F] {
   def umonoidProperties[A](implicit
     arbFA: Arbitrary[F[A]]
   ) = Seq(
-    "append associativity" -> forAll { (x: F[A], y: F[A], z: F[A]) =>
-      ((x |+| y) |+| z) == (x |+| (y |+| z))
+    "append identity" -> forAll { (x: F[A]) =>
+      (x |+| typeClass.empty) == x && x == (typeClass.empty |+| x)
     }
   )
 

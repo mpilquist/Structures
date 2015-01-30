@@ -10,7 +10,7 @@ trait option {
     def pure[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f
     def empty[A] = None
-    def append[A](fa: Option[A], fb: => Option[A]) = fa // invalid definition, let tests drive this fix though
+    def append[A](fa: Option[A], fb: => Option[A]) = fa orElse fb
     def foldLeft[A, B](fa: Option[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = fa.fold(initial)(f(_, initial))
     def traverse[G[_]: Applicative, A, B](fa: Option[A])(f: A => G[B]): G[Option[B]] = {
