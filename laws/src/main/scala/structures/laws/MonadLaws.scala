@@ -49,5 +49,3 @@ trait MonadLaws[F[_]] extends FlatMapLaws[F] with ApplicativeLaws[F] {
   }
 }
 
-
-

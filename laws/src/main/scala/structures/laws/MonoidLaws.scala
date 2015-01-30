@@ -33,5 +33,3 @@ trait MonoidLaws[A] extends SemigroupLaws[A] {
   }
 }
 
-
-

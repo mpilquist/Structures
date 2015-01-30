@@ -33,4 +33,3 @@ trait SemigroupLaws[A] extends Laws {
   }
 }
 
-
