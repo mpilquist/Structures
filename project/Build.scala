@@ -10,7 +10,11 @@ object StructuresBuild extends Build {
     organization := "com.github.mpilquist",
     scalaVersion := "2.11.5",
     crossScalaVersions := Seq("2.11.5"),
-    scalacOptions := Seq(
+    scalacOptions ++= Seq(
+      "-Xfatal-warnings",
+      "-Ywarn-dead-code",
+      "-Ywarn-numeric-widen",
+      "-Ywarn-value-discard",
       "-encoding", "UTF-8",
       "-feature",
       "-language:higherKinds",
@@ -60,6 +64,13 @@ object StructuresBuild extends Build {
         "org.typelevel" %% "discipline" % "0.2.1",
         "org.scalatest" %% "scalatest" % "2.2.3" % "test"
       ),
+      addKindProjector
+    )
+
+  lazy val examples = project.dependsOn(core).
+    settings(commonSettings: _*).
+    settings(
+      name := "structures-examples",
       addKindProjector
     )
 }
