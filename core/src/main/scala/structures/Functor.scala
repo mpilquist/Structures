@@ -50,14 +50,27 @@ import simulacrum.typeclass
       def F = self
       def G = Functor[G]
     }
+
+  def contracompose[G[_]: Contravariant]: Contravariant[Lambda[X => F[G[X]]]] =
+    new Functor.ContraComposite[F, G] {
+      def F = self
+      def G = Contravariant[G]
+    }
 }
 
 object Functor {
 
-  trait Composite[F[_], G[_]] extends Functor[Lambda[X => F[G[X]]]] {
+  trait Composite[F[_], G[_]] extends Any with Functor[Lambda[X => F[G[X]]]] {
     def F: Functor[F]
     def G: Functor[G]
     override def map[A, B](fa: F[G[A]])(f: A => B): F[G[B]] =
       F.map(fa)(G.lift(f))
+  }
+
+  trait ContraComposite[F[_], G[_]] extends Any with Contravariant[Lambda[X => F[G[X]]]] {
+    def F: Functor[F]
+    def G: Contravariant[G]
+    override def contramap[A, B](fa: F[G[A]])(f: B => A): F[G[B]] =
+      F.map(fa)(ga => G.contramap(ga)(f))
   }
 }

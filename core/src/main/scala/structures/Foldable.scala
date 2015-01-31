@@ -32,7 +32,7 @@ import simulacrum.typeclass
 
 object Foldable {
 
-  trait Composite[F[_], G[_]] extends Foldable[Lambda[X => F[G[X]]]] {
+  trait Composite[F[_], G[_]] extends Any with Foldable[Lambda[X => F[G[X]]]] {
     def F: Foldable[F]
     def G: Foldable[G]
     def foldLeft[A, B](fa: F[G[A]], initial: B)(f: (B, A) => B): B =
@@ -69,7 +69,7 @@ object Foldable {
 
 object Foldable1 {
 
-  trait Composite[F[_], G[_]] extends Foldable1[Lambda[X => F[G[X]]]] {
+  trait Composite[F[_], G[_]] extends Any with Foldable1[Lambda[X => F[G[X]]]] {
     def F: Foldable1[F]
     def G: Foldable1[G]
     def foldLeft1[A, B](fga: F[G[A]])(initial: A => B)(f: (B, A) => B): B =

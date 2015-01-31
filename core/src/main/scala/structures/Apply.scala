@@ -111,7 +111,7 @@ import simulacrum.{ typeclass, noop }
 
 object Apply {
 
-  trait Composite[F[_], G[_]] extends Apply[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] {
+  trait Composite[F[_], G[_]] extends Any with Apply[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] {
     def F: Apply[F]
     def G: Apply[G]
     override def apply[A, B](fa: F[G[A]])(f: F[G[A => B]]): F[G[B]] = {

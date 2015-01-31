@@ -16,7 +16,7 @@ import simulacrum.typeclass
 
 object Alternative {
 
-  trait Composite[F[_], G[_]] extends Alternative[Lambda[X => F[G[X]]]] with Applicative.Composite[F, G] {
+  trait Composite[F[_], G[_]] extends Any with Alternative[Lambda[X => F[G[X]]]] with Applicative.Composite[F, G] {
     def F: Alternative[F]
     def G: Alternative[G]
     def empty[A]: F[G[A]] = F.empty

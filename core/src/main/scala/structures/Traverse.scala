@@ -18,7 +18,7 @@ import simulacrum.typeclass
 
 object Traverse {
 
-  trait Composite[F[_], G[_]] extends Traverse[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] with Foldable.Composite[F, G] {
+  trait Composite[F[_], G[_]] extends Any with Traverse[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] with Foldable.Composite[F, G] {
     def F: Traverse[F]
     def G: Traverse[G]
     def traverse[H[_]: Applicative, A, B](fga: F[G[A]])(f: A => H[B]): H[F[G[B]]] =
@@ -42,7 +42,7 @@ object Traverse {
 
 object Traverse1 {
 
-  trait Composite[F[_], G[_]] extends Traverse1[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] with Foldable1.Composite[F, G] {
+  trait Composite[F[_], G[_]] extends Any with Traverse1[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] with Foldable1.Composite[F, G] {
     def F: Traverse1[F]
     def G: Traverse1[G]
     def traverse1[H[_]: Apply, A, B](fga: F[G[A]])(f: A => H[B]): H[F[G[B]]] =

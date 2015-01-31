@@ -27,7 +27,7 @@ import simulacrum.typeclass
 
 object Applicative {
 
-  trait Composite[F[_], G[_]] extends Applicative[Lambda[X => F[G[X]]]] with Apply.Composite[F, G] {
+  trait Composite[F[_], G[_]] extends Any with Applicative[Lambda[X => F[G[X]]]] with Apply.Composite[F, G] {
     def F: Applicative[F]
     def G: Applicative[G]
     def pure[A](a: A): F[G[A]] = F.pure(G.pure(a))
