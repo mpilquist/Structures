@@ -20,4 +20,9 @@ object Equal {
   def instance[A](f: (A, A) => Boolean): Equal[A] = new Equal[A] {
     def equal(x: A, y: A) = f(x, y)
   }
+
+  implicit val contravariantInstance: Contravariant[Equal] = new Contravariant[Equal] {
+    def contramap[A, B](fa: Equal[A])(f: B => A): Equal[B] =
+      Equal.instance[B]((x, y) => fa.equal(f(x), f(y)))
+  }
 }
