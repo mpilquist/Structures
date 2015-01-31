@@ -9,7 +9,7 @@ import simulacrum.{ typeclass, noop }
  * This type class models a more general version of an [[Applicative]] -- specifically, there's
  * no requirement for the `pure` method to exist.
  */
-@typeclass trait Apply[F[_]] extends Any with Functor[F] {
+@typeclass trait Apply[F[_]] extends Any with Functor[F] { self =>
 
   def apply[A, B](fa: F[A])(f: F[A => B]): F[B]
 
@@ -101,4 +101,22 @@ import simulacrum.{ typeclass, noop }
 
   @noop def tuple10[A, B, C, D, E, G, H, I, J, K](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I], fj: F[J], fk: F[K]): F[(A, B, C, D, E, G, H, I, J, K)] =
     map10(fa, fb, fc, fd, fe, fg, fh, fi, fj, fk)((_, _, _, _, _, _, _, _, _, _))
+
+  def compose[G[_]: Apply]: Apply[Lambda[X => F[G[X]]]] =
+    new Apply.Composite[F, G] {
+      def F = self
+      def G = Apply[G]
+    }
+}
+
+object Apply {
+
+  trait Composite[F[_], G[_]] extends Apply[Lambda[X => F[G[X]]]] with Functor.Composite[F, G] {
+    def F: Apply[F]
+    def G: Apply[G]
+    override def apply[A, B](fa: F[G[A]])(f: F[G[A => B]]): F[G[B]] = {
+      val flipped: F[G[A] => G[B]] = F.map(f)(G.flip)
+      F.apply(fa)(flipped)
+    }
+  }
 }

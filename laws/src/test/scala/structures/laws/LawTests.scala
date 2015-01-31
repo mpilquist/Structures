@@ -16,4 +16,6 @@ class LawTests extends FunSuite with Discipline {
   checkAll("List", MonadAppendLaws[List].monadAppend)
   checkAll("Option", MonadAppendLaws[Option].monadAppend)
   checkAll("Map", ApplyLaws[Map[Int, ?]].apply)
+
+  checkAll("Composite Applicative", ApplicativeLaws[Lambda[X => List[Option[X]]]](Applicative[List] compose Applicative[Option]).applicative)
 }

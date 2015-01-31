@@ -46,8 +46,18 @@ import simulacrum.typeclass
     * map a G[F[A]] to a G[F[B]].
     */
   def compose[G[_]: Functor]: Functor[Lambda[X => F[G[X]]]] =
-    new Functor[Lambda[X => F[G[X]]]] {
-      override def map[A, B](fa: F[G[A]])(f: A => B): F[G[B]] =
-        self.map(fa)(Functor[G].lift(f))
+    new Functor.Composite[F, G] {
+      def F = self
+      def G = Functor[G]
     }
+}
+
+object Functor {
+
+  trait Composite[F[_], G[_]] extends Functor[Lambda[X => F[G[X]]]] {
+    def F: Functor[F]
+    def G: Functor[G]
+    override def map[A, B](fa: F[G[A]])(f: A => B): F[G[B]] =
+      F.map(fa)(G.lift(f))
+  }
 }
