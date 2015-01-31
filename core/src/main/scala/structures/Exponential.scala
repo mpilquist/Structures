@@ -15,10 +15,22 @@ import simulacrum.typeclass
    */
   def xmap[A, B](fa: F[A])(f: A => B, g: B => A): F[B]
 
-  def composte[G[_]: Exponential]: Exponential[Lambda[X => F[G[X]]]] =
+  def compose[G[_]: Exponential]: Exponential[Lambda[X => F[G[X]]]] =
     new Exponential.Composite[F, G] {
       def F = self
       def G = Exponential[G]
+    }
+
+  def composeWithFunctor[G[_]: Functor]: Exponential[Lambda[X => F[G[X]]]] =
+    new Exponential.Composite[F, G] {
+      def F = self
+      def G = Functor[G]
+    }
+
+  def composeWithContravariant[G[_]: Contravariant]: Exponential[Lambda[X => F[G[X]]]] =
+    new Exponential.Composite[F, G] {
+      def F = self
+      def G = Contravariant[G]
     }
 }
 
@@ -29,5 +41,19 @@ object Exponential {
     def G: Exponential[G]
     def xmap[A, B](fga: F[G[A]])(f: A => B, g: B => A): F[G[B]] =
       F.xmap(fga)(ga => G.xmap(ga)(f, g), gb => G.xmap(gb)(g, f))
+  }
+
+  trait CovariantComposite[F[_], G[_]] extends Any with Exponential[Lambda[X => F[G[X]]]] {
+    def F: Exponential[F]
+    def G: Functor[G]
+    def xmap[A, B](fga: F[G[A]])(f: A => B, g: B => A): F[G[B]] =
+      F.xmap(fga)(ga => G.map(ga)(f), gb => G.map(gb)(g))
+  }
+
+  trait ContravariantComposite[F[_], G[_]] extends Any with Exponential[Lambda[X => F[G[X]]]] {
+    def F: Exponential[F]
+    def G: Contravariant[G]
+    def xmap[A, B](fga: F[G[A]])(f: A => B, g: B => A): F[G[B]] =
+      F.xmap(fga)(ga => G.contramap(ga)(g), gb => G.contramap(gb)(f))
   }
 }

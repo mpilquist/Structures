@@ -3,7 +3,9 @@ package structures
 import simulacrum.typeclass
 
 @typeclass trait Contravariant[F[_]] extends Any with Exponential[F] { self =>
+
   def contramap[A, B](fa: F[A])(f: B => A): F[B]
+
   override def xmap[A, B](fa: F[A])(f: A => B, g: B => A): F[B] =
     contramap(fa)(g)
 
@@ -13,11 +15,14 @@ import simulacrum.typeclass
       def G = Contravariant[G]
     }
 
-  def contracompose[G[_]: Functor]: Contravariant[Lambda[X => F[G[X]]]] =
-    new Contravariant.ContraComposite[F, G] {
+  override def composeWithFunctor[G[_]: Functor]: Contravariant[Lambda[X => F[G[X]]]] =
+    new Contravariant.CovariantComposite[F, G] {
       def F = self
       def G = Functor[G]
     }
+
+  override def composeWithContravariant[G[_]: Contravariant]: Functor[Lambda[X => F[G[X]]]] =
+    compose[G]
 }
 
 object Contravariant {
@@ -29,7 +34,7 @@ object Contravariant {
       F.contramap(fga)(gb => G.contramap(gb)(f))
   }
 
-  trait ContraComposite[F[_], G[_]] extends Any with Contravariant[Lambda[X => F[G[X]]]] {
+  trait CovariantComposite[F[_], G[_]] extends Any with Contravariant[Lambda[X => F[G[X]]]] {
     def F: Contravariant[F]
     def G: Functor[G]
     def contramap[A, B](fga: F[G[A]])(f: B => A): F[G[B]] =
