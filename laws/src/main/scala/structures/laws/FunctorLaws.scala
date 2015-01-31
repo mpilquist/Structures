@@ -13,24 +13,26 @@ object FunctorLaws {
 
 trait FunctorLaws[F[_]] extends ExponentialLaws[F] {
 
-  import Functor.Adapter
+  import Functor.ops._, Equal.ops._
 
   implicit def typeClass: Functor[F]
 
   def functorProperties[A, B, C](implicit
     arbFA: Arbitrary[F[A]],
     arbAtoB: Arbitrary[A => B],
-    arbBtoC: Arbitrary[B => C]
+    arbBtoC: Arbitrary[B => C],
+    eqFA: Equal[F[A]],
+    eqFC: Equal[F[C]]
   ) = Seq(
     "covariant identity" -> forAll { (fa: F[A]) =>
-      fa.map(identity) == fa
+      fa.map(identity) === fa
     },
     "covariant composition" -> forAll { (fa: F[A], f: A => B, g: B => C) =>
-      fa.map(f).map(g) == fa.map(f andThen g)
+      fa.map(f).map(g) === fa.map(f andThen g)
     }
   )
 
-  def functor(implicit arbFInt: Arbitrary[F[Int]]): RuleSet = new RuleSet {
+  def functor(implicit arbFInt: Arbitrary[F[Int]], eqFInt: Equal[F[Int]], eqFLong: Equal[F[Long]]): RuleSet = new RuleSet {
     def name = "functor"
     def bases = Nil
     def parents = Seq(exponential)

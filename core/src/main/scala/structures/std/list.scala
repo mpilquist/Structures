@@ -2,6 +2,13 @@ package structures
 package std
 
 trait list {
+
+  implicit def listEqual[A: Equal]: Equal[List[A]] = Equal.instance((x, y) =>
+    x.size == y.size && {
+      x.zip(y).forall { case (xx, yy) => Equal[A].equal(xx, yy) }
+    }
+  )
+
   implicit val list: MonadAppend[List] with Traverse[List] = new MonadAppend[List] with Traverse[List] {
     def pure[A](a: A) = List(a)
     def flatMap[A, B](fa: List[A])(f: A => List[B]) = fa flatMap f

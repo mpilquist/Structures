@@ -13,19 +13,20 @@ object USemigroupLaws {
 
 trait USemigroupLaws[F[_]] extends Laws {
 
-  import USemigroup.Adapter
+  import USemigroup.ops._, Equal.ops._
 
   implicit def typeClass: USemigroup[F]
 
   def usemigroupProperties[A](implicit
-    arbFA: Arbitrary[F[A]]
+    arbFA: Arbitrary[F[A]],
+    eqFA: Equal[F[A]]
   ) = Seq(
     "append associativity" -> forAll { (x: F[A], y: F[A], z: F[A]) =>
-      ((x |+| y) |+| z) == (x |+| (y |+| z))
+      ((x |+| y) |+| z) === (x |+| (y |+| z))
     }
   )
 
-  def usemigroup(implicit arbFA: Arbitrary[F[Int]]): RuleSet = new RuleSet {
+  def usemigroup(implicit arbFA: Arbitrary[F[Int]], eqFInt: Equal[F[Int]]): RuleSet = new RuleSet {
     def name = "usemigroup"
     def bases = Nil
     def parents = Nil

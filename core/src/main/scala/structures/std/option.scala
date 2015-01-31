@@ -6,6 +6,12 @@ trait option {
   implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = Monoid.instance(None: Option[A])((x, y) =>
     x.fold(y)(xx => y.fold(Some(xx))(yy => Some(Semigroup[A].append(xx, yy)))))
 
+  implicit def optionEqual[A: Equal]: Equal[Option[A]] = Equal.instance((x, y) => (x, y) match {
+    case (Some(x), Some(y)) => Equal[A].equal(x, y)
+    case (None, None) => true
+    case _ => false
+  })
+
   implicit val option: MonadAppend[Option] with Traverse[Option] = new MonadAppend[Option] with Traverse[Option] {
     def pure[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f

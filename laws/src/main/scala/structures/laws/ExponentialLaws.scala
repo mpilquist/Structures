@@ -13,7 +13,7 @@ object ExponentialLaws {
 
 trait ExponentialLaws[F[_]] extends Laws {
 
-  import Exponential.Adapter
+  import Exponential.ops._, Equal.ops._
 
   implicit def typeClass: Exponential[F]
 
@@ -22,17 +22,19 @@ trait ExponentialLaws[F[_]] extends Laws {
     arbAtoB: Arbitrary[A => B],
     arbBtoA: Arbitrary[B => A],
     arbBtoC: Arbitrary[B => C],
-    arbCtoB: Arbitrary[C => B]
+    arbCtoB: Arbitrary[C => B],
+    eqFA: Equal[F[A]],
+    eqFC: Equal[F[C]]
   ) = Seq(
     "exponential identity" -> forAll { (fa: F[A]) =>
-      fa.xmap[A](identity, identity) == fa
+      fa.xmap[A](identity, identity) === fa
     },
     "exponential composition" -> forAll { (fa: F[A], f1: A => B, f2: B => A, g1: B => C, g2: C => B) =>
-      fa.xmap(f1, f2).xmap(g1, g2) == fa.xmap(f1 andThen g1, g2 andThen f2)
+      fa.xmap(f1, f2).xmap(g1, g2) === fa.xmap(f1 andThen g1, g2 andThen f2)
     }
   )
 
-  def exponential(implicit arbFInt: Arbitrary[F[Int]]): RuleSet = new RuleSet {
+  def exponential(implicit arbFInt: Arbitrary[F[Int]], eqFInt: Equal[F[Int]], eqFLong: Equal[F[Long]]): RuleSet = new RuleSet {
     def name = "exponential"
     def bases = Nil
     def parents = Nil

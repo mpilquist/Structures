@@ -15,7 +15,14 @@ trait AlternativeLaws[F[_]] extends ApplicativeLaws[F] with UMonoidLaws[F] {
 
   implicit def typeClass: Alternative[F]
 
-  def alternative(implicit arbFInt: Arbitrary[F[Int]], arbFIntToString: Arbitrary[F[Int => String]], arbFStringToLong: Arbitrary[F[String => Long]]): RuleSet = new RuleSet {
+  def alternative(implicit
+    arbFInt: Arbitrary[F[Int]],
+    arbFIntToString: Arbitrary[F[Int => String]],
+    arbFStringToLong: Arbitrary[F[String => Long]],
+    eqFInt: Equal[F[Int]],
+    eqFLong: Equal[F[Long]],
+    eqFStirng: Equal[F[String]]
+  ): RuleSet = new RuleSet {
     def name = "alternative"
     def bases = Nil
     def parents = Seq(applicative, umonoid)

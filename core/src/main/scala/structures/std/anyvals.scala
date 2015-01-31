@@ -7,6 +7,13 @@ trait anyvals {
   implicit val intMonoid: Monoid[Int] = Monoid.instance(0)(_ + _)
   implicit val longMonoid: Monoid[Long] = Monoid.instance(0L)(_ + _)
   implicit val stringMonoid: Monoid[String] = Monoid.instance("")(_ + _)
+
+  implicit val byteEqual: Equal[Byte] = Equal.natural
+  implicit val shortEqual: Equal[Short] = Equal.natural
+  implicit val intEqual: Equal[Int] = Equal.natural
+  implicit val longEqual: Equal[Long] = Equal.natural
+  implicit val stringEqual: Equal[String] = Equal.natural
+
 }
 
 object anyvals extends anyvals
