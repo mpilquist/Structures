@@ -15,9 +15,13 @@ trait map {
     }
   )
 
-  implicit def map[K]: Apply[Map[K, ?]] = new Apply[Map[K, ?]] {
-    def map[A, B](fa: Map[K, A])(f: A => B) = fa.map { case (k, v) => (k, f(v)) }
-    def apply[A, B](fa: Map[K, A])(f: Map[K, A => B]) = fa.flatMap { case (k, v) => f.get(k).map { fab => Map(k -> fab(v)) }.getOrElse(Map.empty) }
+  implicit def map[K]: FlatMap[Map[K, ?]] = new FlatMap[Map[K, ?]] {
+    override def map[A, B](fa: Map[K, A])(f: A => B) =
+      fa.map { case (k, v) => (k, f(v)) }
+    override def apply[A, B](fa: Map[K, A])(f: Map[K, A => B]) =
+      fa.flatMap { case (k, v) => f.get(k).map { fab => Map(k -> fab(v)) }.getOrElse(Map.empty) }
+    def flatMap[A, B](fa: Map[K, A])(f: A => Map[K, B]): Map[K, B] =
+      fa.flatMap { case (k, v) => f(v).get(k).fold(Map.empty[K, B])(b => Map(k -> b)) }
   }
 }
 
