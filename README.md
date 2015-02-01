@@ -20,7 +20,7 @@ Yes and no. This is a reimplementation of the core type classes which borrows he
 
 In summary, Structures models a very small subset of what is provided by Scalaz, and does so in a different way, with a different goal.
 
-### Why is a minimizing API footprint desirable? Can't I just ignore stuff I don't use?
+### Why is minimizing API footprint desirable? Can't I just ignore stuff I don't use?
 
 One very real cost of a large API is that there is more stuff to change over time. These changes tend to be organized in to versioned releases, with some claim of binary compatibility or incompatibility. Tooling may enforce the binary compatibility claim. However, tooling typically operates on versioned releases rather than individual artifacts like types and methods. As a result, even if you use the stablest part of a large library, you have to ensure the version of the library you use is binary compatible with the version used by all other libraries in your application, or otherwise risk linkage errors resulting from no tool checked binary compatibility.
 
