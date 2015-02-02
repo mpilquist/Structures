@@ -53,15 +53,15 @@ object FunctorExamples extends App {
 
 
   //
-  // fproduct
+  // zipWith
   //
 
-  // Functor provides a fproduct function which pairs a value with the
+  // Functor provides a zipWith function which pairs a value with the
   // result of applying a function to that value.
   val source = List("a", "aa", "b", "ccccc")
   val result = Map("a" -> 1, "aa" -> 2, "b" ->  1, "ccccc" -> 5)
 
-  assert(Functor[List].fproduct(source)(len).toMap == result)
+  assert(Functor[List].zipWith(source)(len).toMap == result)
 
 
   //
