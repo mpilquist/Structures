@@ -39,7 +39,7 @@ object StructuresBuild extends Build {
     """
   )
 
-  lazy val root = project.in(file(".")).aggregate(core, laws).settings(commonSettings: _*).settings(
+  lazy val root = project.in(file(".")).aggregate(core, laws, examples).settings(commonSettings: _*).settings(
     publishArtifact := false
   )
 
