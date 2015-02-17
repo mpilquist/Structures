@@ -44,7 +44,7 @@ object StructuresBuild extends Build {
       """
     )
 
-  lazy val root = project.in(file(".")).aggregate(corejvm, laws, examples, corejs, jsExamples).settings(commonSettings: _*).settings(
+  lazy val root = project.in(file(".")).aggregate(corejvm, laws, discipline, examples, corejs, jsExamples).settings(commonSettings: _*).settings(
     publishArtifact := false
   )
 
@@ -68,6 +68,16 @@ object StructuresBuild extends Build {
     settings(
       name := "structures-laws",
       libraryDependencies ++= Seq(
+        "org.scalacheck" %% "scalacheck" % "1.11.3"
+      ),
+      addKindProjector
+    )
+
+  lazy val discipline = project.dependsOn(laws).
+    settings(commonSettings: _*).
+    settings(
+      name := "structures-laws-discipline",
+      libraryDependencies ++= Seq(
         "org.scalacheck" %% "scalacheck" % "1.11.3",
         "org.typelevel" %% "discipline" % "0.2.1",
         "org.scalatest" %% "scalatest" % "2.2.3" % "test"
@@ -90,9 +100,4 @@ object StructuresBuild extends Build {
       addKindProjector,
       libraryDependencies ++= Seq("org.scala-js" %%% "scalajs-dom" % "0.8.0")
     )
-
 }
-
-
-
-

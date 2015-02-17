@@ -1,36 +1,18 @@
 package structures
 package laws
 
-import org.scalacheck.Arbitrary
-import org.scalacheck.Prop._
-import org.typelevel.discipline.Laws
+trait SemigroupLaws[A] {
+
+  implicit val typeClass: Semigroup[A]
+
+  import Semigroup.ops._
+
+  def combineAssociativity(x: A, y: A, z: A): IsEqual[A] =
+    ((x |+| y) |+| z) =?= (x |+| (y |+| z))
+}
 
 object SemigroupLaws {
   def apply[A: Semigroup]: SemigroupLaws[A] = new SemigroupLaws[A] {
-    def typeClass = Semigroup[A]
+    val typeClass = Semigroup[A]
   }
 }
-
-trait SemigroupLaws[A] extends Laws {
-
-  import Semigroup.ops._, Equal.ops._
-
-  implicit def typeClass: Semigroup[A]
-
-  def semigroupProperties(implicit
-    arbA: Arbitrary[A],
-    eqA: Equal[A]
-  ) = Seq(
-    "combine associativity" -> forAll { (x: A, y: A, z: A) =>
-      ((x |+| y) |+| z) === (x |+| (y |+| z))
-    }
-  )
-
-  def semigroup(implicit arbA: Arbitrary[A], eqA: Equal[A]): RuleSet = new RuleSet {
-    def name = "semigroup"
-    def bases = Nil
-    def parents = Nil
-    def props = semigroupProperties
-  }
-}
-

@@ -3,10 +3,10 @@ package std
 
 trait list {
 
-  implicit def listEqualK: EqualK[List] = new EqualK[List] {
-    def equal[A](x: List[A], y: List[A])(implicit A: Equal[A]) = {
+  implicit def listEqual[A](implicit A: Equal[A]): Equal[List[A]] = new Equal[List[A]] {
+    def equal(x: List[A], y: List[A]) = {
       x.size == y.size && {
-        x.zip(y).forall { case (xx, yy) => Equal[A].equal(xx, yy) }
+        x.zip(y).forall { case (xx, yy) => A.equal(xx, yy) }
       }
     }
   }
