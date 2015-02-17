@@ -26,7 +26,9 @@ trait MonadCombineDiscipline[F[_]] extends MonadFilterDiscipline[F] with Alterna
     def bases = Nil
     def parents = Seq(monadFilter[A, B, C], alternative[A, B, C])
     def props = Seq(
-      // TODO
+      "monad combine left distributivity" -> forAll { (fa: F[A], fa2: F[A], f: A => F[B]) =>
+        laws.monadCombineLeftDistributivity(fa, fa2, f).isEqual
+      }
     )
   }
 }

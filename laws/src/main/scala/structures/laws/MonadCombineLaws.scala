@@ -7,7 +7,8 @@ trait MonadCombineLaws[F[_]] extends MonadFilterLaws[F] with AlternativeLaws[F] 
 
   import MonadCombine.ops._
 
-  // TODO
+  def monadCombineLeftDistributivity[A, B](fa: F[A], fa2: F[A], f: A => F[B]): IsEqual[F[B]] =
+    (fa |+| fa2).flatMap(f) =?= ((fa flatMap f) |+| (fa2 flatMap f))
 }
 
 object MonadCombineLaws {
