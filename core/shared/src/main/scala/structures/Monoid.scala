@@ -8,14 +8,14 @@ import simulacrum.typeclass
 
 object Monoid {
 
-  def instance[A](empty: A)(append: (A, => A) => A): Monoid[A] = {
+  def instance[A](empty: A)(combine: (A, => A) => A): Monoid[A] = {
     val empty0 = empty
-    val append0 = append
+    val combine0 = combine
     new Monoid[A] {
       def empty = empty0
-      def append(x: A, y: => A) = append0(x, y)
+      def combine(x: A, y: => A) = combine0(x, y)
     }
   }
 
-  implicit def fromUMonoid[F[_], A](implicit p: UMonoid[F]): Monoid[F[A]] = p.toMonoid
+  implicit def fromMonoidK[F[_], A](implicit p: MonoidK[F]): Monoid[F[A]] = p.toMonoid
 }

@@ -11,7 +11,7 @@ object AlternativeLaws {
   }
 }
 
-trait AlternativeLaws[F[_]] extends ApplicativeLaws[F] with UMonoidLaws[F] {
+trait AlternativeLaws[F[_]] extends ApplicativeLaws[F] with MonoidKLaws[F] {
 
   implicit def typeClass: Alternative[F]
 

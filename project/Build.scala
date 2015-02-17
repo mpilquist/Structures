@@ -59,7 +59,7 @@ object StructuresBuild extends Build {
       addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),
       addKindProjector
     )
-  
+
   lazy val corejvm = core.jvm
   lazy val corejs = core.js
 

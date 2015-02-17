@@ -21,7 +21,7 @@ trait SemigroupLaws[A] extends Laws {
     arbA: Arbitrary[A],
     eqA: Equal[A]
   ) = Seq(
-    "append associativity" -> forAll { (x: A, y: A, z: A) =>
+    "combine associativity" -> forAll { (x: A, y: A, z: A) =>
       ((x |+| y) |+| z) === (x |+| (y |+| z))
     }
   )

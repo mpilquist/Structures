@@ -2,7 +2,7 @@ package structures
 
 import simulacrum.typeclass
 
-@typeclass trait Alternative[F[_]] extends Any with Applicative[F] with UMonoid[F] { self =>
+@typeclass trait Alternative[F[_]] extends Any with Applicative[F] with MonoidK[F] { self =>
 
   def asum[G[_]: Foldable, A](gfa: G[F[A]]): F[A] =
     Foldable[G].fold(gfa)(toMonoid[A])
@@ -20,6 +20,6 @@ object Alternative {
     def F: Alternative[F]
     def G: Alternative[G]
     def empty[A]: F[G[A]] = F.empty
-    def append[A](x: F[G[A]], y: => F[G[A]]): F[G[A]] = F.append(x, y)
+    def combine[A](x: F[G[A]], y: => F[G[A]]): F[G[A]] = F.combine(x, y)
   }
 }

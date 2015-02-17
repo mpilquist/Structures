@@ -7,7 +7,7 @@ import structures._
 
 object JsExamples extends JSApp {
 
-  private def appendExample(description: String, content: String): Unit = { 
+  private def combineExample(description: String, content: String): Unit = {
     val delement = document.createElement("p")
     delement.textContent = description
     document.body.appendChild(delement)
@@ -16,7 +16,7 @@ object JsExamples extends JSApp {
     document.body.appendChild(celement)
     ()
   }
-  
+
   def main(): Unit = {
     val len: String => Int = _.length
 

@@ -20,7 +20,7 @@ trait MonoidLaws[A] extends SemigroupLaws[A] {
     arbA: Arbitrary[A],
     eqA: Equal[A]
   ) = Seq(
-    "append identity" -> forAll { (x: A) =>
+    "combine identity" -> forAll { (x: A) =>
       (x |+| typeClass.empty) === x && x === (typeClass.empty |+| x)
     }
   )

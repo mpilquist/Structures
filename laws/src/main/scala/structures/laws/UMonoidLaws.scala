@@ -4,23 +4,23 @@ package laws
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 
-object UMonoidLaws {
-  def apply[F[_]: UMonoid]: UMonoidLaws[F] = new UMonoidLaws[F] {
-    def typeClass = UMonoid[F]
+object MonoidKLaws {
+  def apply[F[_]: MonoidK]: MonoidKLaws[F] = new MonoidKLaws[F] {
+    def typeClass = MonoidK[F]
   }
 }
 
-trait UMonoidLaws[F[_]] extends USemigroupLaws[F] {
+trait MonoidKLaws[F[_]] extends SemigroupKLaws[F] {
 
-  import UMonoid.ops._, Equal.ops._
+  import MonoidK.ops._, Equal.ops._
 
-  implicit def typeClass: UMonoid[F]
+  implicit def typeClass: MonoidK[F]
 
   def umonoidProperties[A](implicit
     arbFA: Arbitrary[F[A]],
     eqFA: Equal[F[A]]
   ) = Seq(
-    "append identity" -> forAll { (x: F[A]) =>
+    "combine identity" -> forAll { (x: F[A]) =>
       (x |+| typeClass.empty) === x && x === (typeClass.empty |+| x)
     }
   )

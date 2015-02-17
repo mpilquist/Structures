@@ -4,19 +4,21 @@ package std
 trait option {
 
   implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = Monoid.instance(None: Option[A])((x, y) =>
-    x.fold(y)(xx => y.fold(Some(xx))(yy => Some(Semigroup[A].append(xx, yy)))))
+    x.fold(y)(xx => y.fold(Some(xx))(yy => Some(Semigroup[A].combine(xx, yy)))))
 
-  implicit def optionEqual[A: Equal]: Equal[Option[A]] = Equal.instance((x, y) => (x, y) match {
-    case (Some(x), Some(y)) => Equal[A].equal(x, y)
-    case (None, None) => true
-    case _ => false
-  })
+  implicit def optionEqualK: EqualK[Option] = new EqualK[Option] {
+    def equal[A](x: Option[A], y: Option[A])(implicit A: Equal[A]) = (x, y) match {
+      case (Some(x), Some(y)) => Equal[A].equal(x, y)
+      case (None, None) => true
+      case _ => false
+    }
+  }
 
-  implicit val option: MonadAppend[Option] with Traverse[Option] = new MonadAppend[Option] with Traverse[Option] {
+  implicit val option: MonadCombine[Option] with Traverse[Option] = new MonadCombine[Option] with Traverse[Option] {
     def pure[A](a: A) = Some(a)
     def flatMap[A, B](fa: Option[A])(f: A => Option[B]) = fa flatMap f
     def empty[A] = None
-    def append[A](fa: Option[A], fb: => Option[A]) = fa orElse fb
+    def combine[A](fa: Option[A], fb: => Option[A]) = fa orElse fb
     def foldLeft[A, B](fa: Option[A], initial: B)(f: (B, A) => B) = fa.foldLeft(initial)(f)
     def foldRight[A, B](fa: Option[A], initial: B)(f: (A, B) => B) = fa.fold(initial)(f(_, initial))
     def traverse[G[_]: Applicative, A, B](fa: Option[A])(f: A => G[B]): G[Option[B]] = {

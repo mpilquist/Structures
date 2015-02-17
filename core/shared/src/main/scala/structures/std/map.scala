@@ -4,7 +4,7 @@ package std
 trait map {
 
   implicit def mapMonoid[K, V: Semigroup]: Monoid[Map[K, V]] = Monoid.instance(Map.empty[K, V]) { (x, y) =>
-    y.foldLeft(x) { case (acc, (k, v)) => acc.updated(k, (acc.get(k).fold(v)(xv => Semigroup[V].append(xv, v)))) }
+    y.foldLeft(x) { case (acc, (k, v)) => acc.updated(k, (acc.get(k).fold(v)(xv => Semigroup[V].combine(xv, v)))) }
   }
 
   implicit def mapEqual[K, V: Equal]: Equal[Map[K, V]] = Equal.instance((x, y) =>

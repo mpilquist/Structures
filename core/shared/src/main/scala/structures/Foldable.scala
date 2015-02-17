@@ -9,7 +9,7 @@ import simulacrum.typeclass
   def foldRight[A, B](fa: F[A], initial: B)(f: (A, B) => B): B
 
   def foldMap[A, B](fa: F[A])(f: A => B)(implicit mb: Monoid[B]): B =
-    foldLeft(fa, mb.empty)((b, a) => mb.append(b, f(a)))
+    foldLeft(fa, mb.empty)((b, a) => mb.combine(b, f(a)))
 
   def fold[A: Monoid](fa: F[A]): A =
     foldMap(fa)(identity)
@@ -20,8 +20,8 @@ import simulacrum.typeclass
   def sequence_[G[_]: Applicative, A, B](fga: F[G[A]]): G[Unit] =
     traverse_(fga)(identity)
 
-  def psum[G[_]: UMonoid, A](fga: F[G[A]]): G[A] =
-    foldLeft(fga, UMonoid[G].empty[A])((acc, ga) => UMonoid[G].append(acc, ga))
+  def psum[G[_]: MonoidK, A](fga: F[G[A]]): G[A] =
+    foldLeft(fga, MonoidK[G].empty[A])((acc, ga) => MonoidK[G].combine(acc, ga))
 
   def compose[G[_]: Foldable]: Foldable[Lambda[X => F[G[X]]]] =
     new Foldable.Composite[F, G] {
@@ -55,7 +55,7 @@ object Foldable {
     foldRight1(fa)(f(_, initial))(f)
 
   def foldMap1[A, B](fa: F[A])(f: A => B)(implicit sb: Semigroup[B]): B =
-    foldLeft1(fa)(f)((b, a) => sb.append(b, f(a)))
+    foldLeft1(fa)(f)((b, a) => sb.combine(b, f(a)))
 
   def fold1[A: Semigroup](fa: F[A]): A =
     foldMap1(fa)(identity)

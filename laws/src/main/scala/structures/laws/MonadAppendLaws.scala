@@ -4,17 +4,17 @@ package laws
 import org.scalacheck.Arbitrary
 import org.scalacheck.Prop._
 
-object MonadAppendLaws {
-  def apply[F[_]: MonadAppend]: MonadAppendLaws[F] = new MonadAppendLaws[F] {
-    def typeClass = MonadAppend[F]
+object MonadCombineLaws {
+  def apply[F[_]: MonadCombine]: MonadCombineLaws[F] = new MonadCombineLaws[F] {
+    def typeClass = MonadCombine[F]
   }
 }
 
-trait MonadAppendLaws[F[_]] extends MonadFilterLaws[F] with UMonoidLaws[F] {
+trait MonadCombineLaws[F[_]] extends MonadFilterLaws[F] with MonoidKLaws[F] {
 
-  import MonadAppend.ops._
+  import MonadCombine.ops._
 
-  implicit def typeClass: MonadAppend[F]
+  implicit def typeClass: MonadCombine[F]
 
   def monadAppend(implicit
     arbFInt: Arbitrary[F[Int]],
@@ -26,7 +26,7 @@ trait MonadAppendLaws[F[_]] extends MonadFilterLaws[F] with UMonoidLaws[F] {
     eqFLong: Equal[F[Long]],
     eqFStirng: Equal[F[String]]
   ): RuleSet = new RuleSet {
-    def name = "monad append"
+    def name = "monad combine"
     def bases = Nil
     def parents = Seq(monadFilter, umonoid)
     def props = Nil

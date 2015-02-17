@@ -21,6 +21,8 @@ object Equal {
     def equal(x: A, y: A) = f(x, y)
   }
 
+  implicit def fromEqualK[F[_]: EqualK, A: Equal]: Equal[F[A]] = EqualK[F].toEqual[A]
+
   implicit val contravariantInstance: Contravariant[Equal] = new Contravariant[Equal] {
     def contramap[A, B](fa: Equal[A])(f: B => A): Equal[B] =
       Equal.instance[B]((x, y) => fa.equal(f(x), f(y)))

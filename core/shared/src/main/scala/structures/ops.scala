@@ -3,8 +3,8 @@ package structures
 object ops extends Equal.ToEqualOps
   with Semigroup.ToSemigroupOps
   with Monoid.ToMonoidOps
-  with USemigroup.ToUSemigroupOps
-  with UMonoid.ToUMonoidOps
+  with SemigroupK.ToSemigroupKOps
+  with MonoidK.ToMonoidKOps
   with Exponential.ToExponentialOps
   with Contravariant.ToContravariantOps
   with Functor.ToFunctorOps
@@ -14,7 +14,7 @@ object ops extends Equal.ToEqualOps
   with FlatMap.ToFlatMapOps
   with Monad.ToMonadOps
   with MonadFilter.ToMonadFilterOps
-  with MonadAppend.ToMonadAppendOps
+  with MonadCombine.ToMonadCombineOps
   with Foldable.ToFoldableOps
   with Foldable1.ToFoldable1Ops
   with Traverse.ToTraverseOps

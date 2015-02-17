@@ -14,8 +14,8 @@ class LawTests extends FunSuite with Discipline {
   checkAll("Long", MonoidLaws[Long].monoid)
   checkAll("String", MonoidLaws[String].monoid)
 
-  checkAll("List", MonadAppendLaws[List].monadAppend)
-  checkAll("Option", MonadAppendLaws[Option].monadAppend)
+  checkAll("List", MonadCombineLaws[List].monadAppend)
+  checkAll("Option", MonadCombineLaws[Option].monadAppend)
   checkAll("Map", FlatMapLaws[Map[Int, ?]].flatMap)
 
 
