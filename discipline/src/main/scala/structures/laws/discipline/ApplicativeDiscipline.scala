@@ -9,17 +9,7 @@ trait ApplicativeDiscipline[F[_]] extends ApplyDiscipline[F] {
 
   def laws: ApplicativeLaws[F]
 
-  def applicative[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    arbFAtoB: Arbitrary[F[A => B]],
-    arbFBtoC: Arbitrary[F[B => C]],
-    eqFA: Equal[F[A]],
-    eqFB: Equal[F[B]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new DefaultRuleSet(
+  def applicative[A: Arbitrary: Equal, B: Arbitrary: Equal, C: Arbitrary: Equal]: RuleSet = new DefaultRuleSet(
     name = "applicative",
     parent = Some(apply[A, B, C]),
     props =
@@ -42,7 +32,9 @@ trait ApplicativeDiscipline[F[_]] extends ApplyDiscipline[F] {
 }
 
 object ApplicativeDiscipline {
-  def apply[F[_]: Applicative]: ApplicativeDiscipline[F] = new ApplicativeDiscipline[F] {
+  def apply[F[_]](implicit TC: Applicative[F], A: ArbitraryK[F], E: EqualK[F]): ApplicativeDiscipline[F] = new ApplicativeDiscipline[F] {
     def laws = ApplicativeLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

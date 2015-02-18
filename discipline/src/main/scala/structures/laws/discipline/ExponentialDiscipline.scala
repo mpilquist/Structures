@@ -10,14 +10,10 @@ trait ExponentialDiscipline[F[_]] extends Laws {
 
   def laws: ExponentialLaws[F]
 
-  def exponential[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    eqFA: Equal[F[A]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new SimpleRuleSet(
+  implicit def arbitraryKF: ArbitraryK[F]
+  implicit def equalKF: EqualK[F]
+
+  def exponential[A: Arbitrary: Equal, B: Arbitrary, C: Arbitrary: Equal]: RuleSet = new SimpleRuleSet(
     name = "exponential",
     props =
       "exponential identity" -> forAll { (fa: F[A]) =>
@@ -30,7 +26,9 @@ trait ExponentialDiscipline[F[_]] extends Laws {
 }
 
 object ExponentialDiscipline {
-  def apply[F[_]: Exponential]: ExponentialDiscipline[F] = new ExponentialDiscipline[F] {
+  def apply[F[_]](implicit TC: Exponential[F], A: ArbitraryK[F], E: EqualK[F]): ExponentialDiscipline[F] = new ExponentialDiscipline[F] {
     def laws = ExponentialLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

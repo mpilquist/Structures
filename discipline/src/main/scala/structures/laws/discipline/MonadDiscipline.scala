@@ -9,19 +9,7 @@ trait MonadDiscipline[F[_]] extends FlatMapDiscipline[F] with ApplicativeDiscipl
 
   def laws: MonadLaws[F]
 
-  def monad[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbFB: Arbitrary[F[B]],
-    arbFC: Arbitrary[F[C]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    arbFAtoB: Arbitrary[F[A => B]],
-    arbFBtoC: Arbitrary[F[B => C]],
-    eqFA: Equal[F[A]],
-    eqFB: Equal[F[B]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new RuleSet {
+  def monad[A: Arbitrary: Equal, B: Arbitrary: Equal, C: Arbitrary: Equal]: RuleSet = new RuleSet {
     def name = "monad"
     def bases = Nil
     def parents = Seq(flatMap[A, B, C], applicative[A, B, C])
@@ -37,7 +25,9 @@ trait MonadDiscipline[F[_]] extends FlatMapDiscipline[F] with ApplicativeDiscipl
 }
 
 object MonadDiscipline {
-  def apply[F[_]: Monad]: MonadDiscipline[F] = new MonadDiscipline[F] {
+  def apply[F[_]](implicit TC: Monad[F], A: ArbitraryK[F], E: EqualK[F]): MonadDiscipline[F] = new MonadDiscipline[F] {
     def laws = MonadLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

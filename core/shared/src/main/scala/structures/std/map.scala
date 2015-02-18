@@ -7,8 +7,8 @@ trait map {
     y.foldLeft(x) { case (acc, (k, v)) => acc.updated(k, (acc.get(k).fold(v)(xv => Semigroup[V].combine(xv, v)))) }
   }
 
-  implicit def mapEqual[K, V](implicit V: Equal[V]): Equal[Map[K, V]] = new Equal[Map[K, V]] {
-    def equal(x: Map[K, V], y: Map[K, V]) = {
+  implicit def mapEqualK[K]: EqualK[Map[K, ?]] = new EqualK[Map[K, ?]] {
+    def equal[V](x: Map[K, V], y: Map[K, V])(implicit V: Equal[V]) = {
       x.size == y.size && {
         x.forall { case (xk, xv) =>
           y.get(xk).fold(false)(yv => V.equal(xv, yv))
@@ -16,6 +16,8 @@ trait map {
       }
     }
   }
+
+  implicit def mapEqual[K, V: Equal]: Equal[Map[K, V]] = mapEqualK[K].toEqual[V]
 
   implicit def map[K]: FlatMap[Map[K, ?]] = new FlatMap[Map[K, ?]] {
     override def map[A, B](fa: Map[K, A])(f: A => B) =

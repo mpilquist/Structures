@@ -9,16 +9,7 @@ trait ApplyDiscipline[F[_]] extends FunctorDiscipline[F] {
 
   def laws: ApplyLaws[F]
 
-  def apply[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    arbFAtoB: Arbitrary[F[A => B]],
-    arbFBtoC: Arbitrary[F[B => C]],
-    eqFA: Equal[F[A]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new DefaultRuleSet(
+  def apply[A: Arbitrary: Equal, B: Arbitrary, C: Arbitrary: Equal]: RuleSet = new DefaultRuleSet(
     name = "apply",
     parent = Some(functor[A, B, C]),
     props =
@@ -29,7 +20,9 @@ trait ApplyDiscipline[F[_]] extends FunctorDiscipline[F] {
 }
 
 object ApplyDiscipline {
-  def apply[F[_]: Apply]: ApplyDiscipline[F] = new ApplyDiscipline[F] {
+  def apply[F[_]](implicit TC: Apply[F], A: ArbitraryK[F], E: EqualK[F]): ApplyDiscipline[F] = new ApplyDiscipline[F] {
     def laws = ApplyLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

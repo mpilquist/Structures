@@ -9,14 +9,7 @@ trait FunctorDiscipline[F[_]] extends ExponentialDiscipline[F] {
 
   def laws: FunctorLaws[F]
 
-  def functor[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    eqFA: Equal[F[A]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new DefaultRuleSet(
+  def functor[A: Arbitrary: Equal, B: Arbitrary, C: Arbitrary: Equal]: RuleSet = new DefaultRuleSet(
     name = "functor",
     parent = Some(exponential[A, B, C]),
     props =
@@ -30,7 +23,9 @@ trait FunctorDiscipline[F[_]] extends ExponentialDiscipline[F] {
 }
 
 object FunctorDiscipline {
-  def apply[F[_]: Functor]: FunctorDiscipline[F] = new FunctorDiscipline[F] {
+  def apply[F[_]](implicit TC: Functor[F], A: ArbitraryK[F], E: EqualK[F]): FunctorDiscipline[F] = new FunctorDiscipline[F] {
     def laws = FunctorLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

@@ -9,19 +9,7 @@ trait FlatMapDiscipline[F[_]] extends ApplyDiscipline[F] {
 
   def laws: FlatMapLaws[F]
 
-  def flatMap[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbFB: Arbitrary[F[B]],
-    arbFC: Arbitrary[F[C]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    arbFAtoB: Arbitrary[F[A => B]],
-    arbFBtoC: Arbitrary[F[B => C]],
-    eqFA: Equal[F[A]],
-    eqFB: Equal[F[B]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new DefaultRuleSet(
+  def flatMap[A: Arbitrary: Equal, B: Arbitrary: Equal, C: Arbitrary: Equal]: RuleSet = new DefaultRuleSet(
     name = "flatMap",
     parent = Some(apply[A, B, C]),
     props =
@@ -32,7 +20,9 @@ trait FlatMapDiscipline[F[_]] extends ApplyDiscipline[F] {
 }
 
 object FlatMapDiscipline {
-  def apply[F[_]: FlatMap]: FlatMapDiscipline[F] = new FlatMapDiscipline[F] {
+  def apply[F[_]](implicit TC: FlatMap[F], A: ArbitraryK[F], E: EqualK[F]): FlatMapDiscipline[F] = new FlatMapDiscipline[F] {
     def laws = FlatMapLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

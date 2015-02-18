@@ -9,17 +9,7 @@ trait AlternativeDiscipline[F[_]] extends ApplicativeDiscipline[F] with MonoidKD
 
   def laws: AlternativeLaws[F]
 
-  def alternative[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    arbFAtoB: Arbitrary[F[A => B]],
-    arbFBtoC: Arbitrary[F[B => C]],
-    eqFA: Equal[F[A]],
-    eqFB: Equal[F[B]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new RuleSet {
+  def alternative[A: Arbitrary: Equal, B: Arbitrary: Equal, C: Arbitrary: Equal]: RuleSet = new RuleSet {
     def name = "alternative"
     def bases = Nil
     def parents = Seq(applicative[A, B, C], monoidK[A])
@@ -38,7 +28,9 @@ trait AlternativeDiscipline[F[_]] extends ApplicativeDiscipline[F] with MonoidKD
 }
 
 object AlternativeDiscipline {
-  def apply[F[_]: Alternative]: AlternativeDiscipline[F] = new AlternativeDiscipline[F] {
+  def apply[F[_]](implicit TC: Alternative[F], A: ArbitraryK[F], E: EqualK[F]): AlternativeDiscipline[F] = new AlternativeDiscipline[F] {
     def laws = AlternativeLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

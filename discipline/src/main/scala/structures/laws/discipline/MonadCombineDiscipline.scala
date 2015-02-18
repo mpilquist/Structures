@@ -9,19 +9,7 @@ trait MonadCombineDiscipline[F[_]] extends MonadFilterDiscipline[F] with Alterna
 
   def laws: MonadCombineLaws[F]
 
-  def monadCombine[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbFB: Arbitrary[F[B]],
-    arbFC: Arbitrary[F[C]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    arbFAtoB: Arbitrary[F[A => B]],
-    arbFBtoC: Arbitrary[F[B => C]],
-    eqFA: Equal[F[A]],
-    eqFB: Equal[F[B]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new RuleSet {
+  def monadCombine[A: Arbitrary: Equal, B: Arbitrary: Equal, C: Arbitrary: Equal]: RuleSet = new RuleSet {
     def name = "monad combine"
     def bases = Nil
     def parents = Seq(monadFilter[A, B, C], alternative[A, B, C])
@@ -34,7 +22,9 @@ trait MonadCombineDiscipline[F[_]] extends MonadFilterDiscipline[F] with Alterna
 }
 
 object MonadCombineDiscipline {
-  def apply[F[_]: MonadCombine]: MonadCombineDiscipline[F] = new MonadCombineDiscipline[F] {
+  def apply[F[_]](implicit TC: MonadCombine[F], A: ArbitraryK[F], E: EqualK[F]): MonadCombineDiscipline[F] = new MonadCombineDiscipline[F] {
     def laws = MonadCombineLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }

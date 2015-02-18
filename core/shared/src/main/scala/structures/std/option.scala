@@ -6,8 +6,8 @@ trait option {
   implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = Monoid.instance(None: Option[A])((x, y) =>
     x.fold(y)(xx => y.fold(Some(xx))(yy => Some(Semigroup[A].combine(xx, yy)))))
 
-  implicit def optionEqual[A](implicit A: Equal[A]): Equal[Option[A]] = new Equal[Option[A]] {
-    def equal(x: Option[A], y: Option[A]) = (x, y) match {
+  implicit val optionEqualK: EqualK[Option] = new EqualK[Option] {
+    def equal[A](x: Option[A], y: Option[A])(implicit A: Equal[A]) = (x, y) match {
       case (Some(x), Some(y)) => A.equal(x, y)
       case (None, None) => true
       case _ => false

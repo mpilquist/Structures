@@ -9,14 +9,7 @@ trait ContravariantDiscipline[F[_]] extends ExponentialDiscipline[F] {
 
   def laws: ContravariantLaws[F]
 
-  def contravariant[A, B, C](implicit
-    arbFA: Arbitrary[F[A]],
-    arbA: Arbitrary[A],
-    arbB: Arbitrary[B],
-    arbC: Arbitrary[C],
-    eqFA: Equal[F[A]],
-    eqFC: Equal[F[C]]
-  ): RuleSet = new DefaultRuleSet(
+  def contravariant[A: Arbitrary: Equal, B: Arbitrary, C: Arbitrary: Equal]: RuleSet = new DefaultRuleSet(
     name = "contravariant",
     parent = Some(exponential[A, B, C]),
     props =
@@ -30,7 +23,9 @@ trait ContravariantDiscipline[F[_]] extends ExponentialDiscipline[F] {
 }
 
 object ContravariantDiscipline {
-  def apply[F[_]: Contravariant]: ContravariantDiscipline[F] = new ContravariantDiscipline[F] {
+  def apply[F[_]](implicit TC: Contravariant[F], A: ArbitraryK[F], E: EqualK[F]): ContravariantDiscipline[F] = new ContravariantDiscipline[F] {
     def laws = ContravariantLaws[F]
+    def arbitraryKF = A
+    def equalKF = E
   }
 }
