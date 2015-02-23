@@ -24,6 +24,8 @@ trait list {
       }
     }
   }
+
+  implicit def listMonoid[A]: Monoid[List[A]] = list.toMonoid
 }
 
 object list extends list

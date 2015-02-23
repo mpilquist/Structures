@@ -7,7 +7,7 @@ import simulacrum.{ typeclass, op }
  */
 @typeclass trait SemigroupK[F[_]] extends Any { self =>
 
-  @op("|+|")
+  @op("<+>")
   def combine[A](x: F[A], y: => F[A]): F[A]
 
   def toSemigroup[A]: Semigroup[F[A]] = new Semigroup[F[A]] {

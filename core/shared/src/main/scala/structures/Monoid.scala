@@ -16,6 +16,4 @@ object Monoid {
       def combine(x: A, y: => A) = combine0(x, y)
     }
   }
-
-  implicit def fromMonoidK[F[_], A](implicit p: MonoidK[F]): Monoid[F[A]] = p.toMonoid
 }

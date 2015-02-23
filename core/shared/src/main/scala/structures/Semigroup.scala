@@ -14,6 +14,4 @@ object Semigroup {
       def combine(x: A, y: => A) = combine0(x, y)
     }
   }
-
-  implicit def fromSemigroupK[F[_], A](implicit p: SemigroupK[F]): Semigroup[F[A]] = p.toSemigroup
 }

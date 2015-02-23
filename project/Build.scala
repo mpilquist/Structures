@@ -53,7 +53,7 @@ object StructuresBuild extends Build {
     settings(
       name := "structures-core",
       libraryDependencies ++= Seq(
-        "com.github.mpilquist" %% "simulacrum" % "0.2.0" % "optional",
+        "com.github.mpilquist" %% "simulacrum" % "0.3.0" % "optional",
         "org.scalatest" %% "scalatest" % "2.2.3" % "test"
       ),
       addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),

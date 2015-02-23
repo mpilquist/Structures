@@ -11,6 +11,6 @@ import simulacrum.typeclass
 
   def toMonoid[A]: Monoid[F[A]] = new Monoid[F[A]] {
     def empty = self.empty[A]
-    def combine(x: F[A], y: => F[A]) = combine(x, y)
+    def combine(x: F[A], y: => F[A]) = self.combine(x, y)
   }
 }
