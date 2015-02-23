@@ -20,7 +20,7 @@ import simulacrum.typeclass
   def sequence_[G[_]: Applicative, A, B](fga: F[G[A]]): G[Unit] =
     traverse_(fga)(identity)
 
-  def psum[G[_]: MonoidK, A](fga: F[G[A]]): G[A] =
+  def foldK[G[_]: MonoidK, A](fga: F[G[A]]): G[A] =
     foldLeft(fga, MonoidK[G].empty[A])((acc, ga) => MonoidK[G].combine(acc, ga))
 
   def compose[G[_]: Foldable]: Foldable[Lambda[X => F[G[X]]]] =
