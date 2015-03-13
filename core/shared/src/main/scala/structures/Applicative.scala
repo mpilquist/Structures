@@ -5,7 +5,7 @@ import simulacrum.typeclass
 /**
  * Type class that describes functors which have a lawful `Apply` instance and
  * that support a `pure` method which adheres to the laws described in
- * [[structures.laws.ApplicativeLaws]].
+ * `structures.laws.ApplicativeLaws`.
  *
  * Also known as idioms.
  *

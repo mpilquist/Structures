@@ -57,7 +57,7 @@ object StructuresBuild extends Build {
         "com.github.mpilquist" %% "simulacrum" % "0.3.0" % "optional",
         "org.scalatest" %% "scalatest" % "2.2.3" % "test"
       ),
-      addCompilerPlugin("org.scalamacros" % "paradise" % "2.0.1" cross CrossVersion.full),
+      addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full),
       addKindProjector
     )
 

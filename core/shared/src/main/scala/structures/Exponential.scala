@@ -4,7 +4,7 @@ import simulacrum.typeclass
 
 /**
  * Type class that describes type constructors that support an `xmap` method which adheres
- * to the laws described in [[structures.laws.ExponentialLaws]].
+ * to the laws described in `structures.laws.ExponentialLaws`.
  *
  * The name is short for "exponential functor", which is also known as "invariant functor".
  */

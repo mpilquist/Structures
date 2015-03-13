@@ -5,7 +5,7 @@ import simulacrum.typeclass
 /**
  * Type class that describes type constructors that support a `map`
  * method which adheres to the laws described in
- * [[structures.laws.FunctorLaws]].
+ * `structures.laws.FunctorLaws`.
  *
  * The name is short for "covariant functor".
  *

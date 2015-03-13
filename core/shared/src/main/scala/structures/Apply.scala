@@ -4,7 +4,7 @@ import simulacrum.{ typeclass, noop }
 
 /**
  * Type class that describes functors that support an `apply` method which adheres
- * to the laws described in [[structures.laws.ApplyLaws]].
+ * to the laws described in `structures.laws.ApplyLaws`.
  *
  * This type class models a more general version of an [[Applicative]] -- specifically, there's
  * no requirement for the `pure` method to exist.
