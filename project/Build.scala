@@ -41,6 +41,7 @@ object StructuresBuild extends Build {
       initialCommands += """
         import structures._
         import structures.std._
+        import structures.ops._
       """
     )
 
