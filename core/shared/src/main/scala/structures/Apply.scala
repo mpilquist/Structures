@@ -18,60 +18,60 @@ import simulacrum.{ typeclass, noop }
 
 
   @noop def apply2[A, B, X](fa: F[A], fb: F[B])(f: F[(A, B) => X]): F[X] =
-    apply(fa)(apply(fb)(map(f)(ff => (b: B) => (a: A) => ff(a, b))))
+    apply(fb)(apply(fa)(map(f)(ff => (a: A) => (b: B) => ff(a, b))))
 
   @noop def apply3[A, B, C, X](fa: F[A], fb: F[B], fc: F[C])(f: F[(A, B, C) => X]): F[X] =
-    apply(fa)(apply2(fb, fc)(map(f)(ff => (b: B, c: C) => (a: A) => ff(a, b, c))))
+    apply(fc)(apply2(fa, fb)(map(f)(ff => (a: A, b: B) => (c: C) => ff(a, b, c))))
 
   @noop def apply4[A, B, C, D, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D])(f: F[(A, B, C, D) => X]): F[X] =
-    apply2(fa, fb)(apply2(fc, fd)(map(f)(ff => (c: C, d: D) => (a: A, b: B) => ff(a, b, c, d))))
+    apply2(fc, fd)(apply2(fa, fb)(map(f)(ff => (a: A, b: B) => (c: C, d: D) => ff(a, b, c, d))))
 
   @noop def apply5[A, B, C, D, E, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E])(f: F[(A, B, C, D, E) => X]): F[X] =
-    apply2(fa, fb)(apply3(fc, fd, fe)(map(f)(ff => (c: C, d: D, e: E) => (a: A, b: B) => ff(a, b, c, d, e))))
+    apply2(fd, fe)(apply3(fa, fb, fc)(map(f)(ff => (a: A, b: B, c: C) => (d: D, e: E) => ff(a, b, c, d, e))))
 
   @noop def apply6[A, B, C, D, E, G, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G])(f: F[(A, B, C, D, E, G) => X]): F[X] =
-    apply3(fa, fb, fc)(apply3(fd, fe, fg)(map(f)(ff => (d: D, e: E, g: G) => (a: A, b: B, c: C) => ff(a, b, c, d, e, g))))
+    apply3(fd, fe, fg)(apply3(fa, fb, fc)(map(f)(ff => (a: A, b: B, c: C) => (d: D, e: E, g: G) => ff(a, b, c, d, e, g))))
 
   @noop def apply7[A, B, C, D, E, G, H, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H])(f: F[(A, B, C, D, E, G, H) => X]): F[X] =
-    apply3(fa, fb, fc)(apply4(fd, fe, fg, fh)(map(f)(ff => (d: D, e: E, g: G, h: H) => (a: A, b: B, c: C) => ff(a, b, c, d, e, g, h))))
+    apply3(fe, fg, fh)(apply4(fa, fb, fc, fd)(map(f)(ff => (a: A, b: B, c: C, d: D) => (e: E, g: G, h: H) => ff(a, b, c, d, e, g, h))))
 
   @noop def apply8[A, B, C, D, E, G, H, I, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I])(f: F[(A, B, C, D, E, G, H, I) => X]): F[X] =
-    apply4(fa, fb, fc, fd)(apply4(fe, fg, fh, fi)(map(f)(ff => (e: E, g: G, h: H, i: I) => (a: A, b: B, c: C, d: D) => ff(a, b, c, d, e, g, h, i))))
+    apply4(fe, fg, fh, fi)(apply4(fa, fb, fc, fd)(map(f)(ff => (a: A, b: B, c: C, d: D) => (e: E, g: G, h: H, i: I) => ff(a, b, c, d, e, g, h, i))))
 
   @noop def apply9[A, B, C, D, E, G, H, I, J, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I], fj: F[J])(f: F[(A, B, C, D, E, G, H, I, J) => X]): F[X] =
-    apply4(fa, fb, fc, fd)(apply5(fe, fg, fh, fi, fj)(map(f)(ff => (e: E, g: G, h: H, i: I, j: J) => (a: A, b: B, c: C, d: D) => ff(a, b, c, d, e, g, h, i, j))))
+    apply4(fg, fh, fi, fj)(apply5(fa, fb, fc, fd, fe)(map(f)(ff => (a: A, b: B, c: C, d: D, e: E) => (g: G, h: H, i: I, j: J) => ff(a, b, c, d, e, g, h, i, j))))
 
   @noop def apply10[A, B, C, D, E, G, H, I, J, K, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I], fj: F[J], fk: F[K])(f: F[(A, B, C, D, E, G, H, I, J, K) => X]): F[X] =
-    apply5(fa, fb, fc, fd, fe)(apply5(fg, fh, fi, fj, fk)(map(f)(ff => (g: G, h: H, i: I, j: J, k: K) => (a: A, b: B, c: C, d: D, e: E) => ff(a, b, c, d, e, g, h, i, j, k))))
+    apply5(fg, fh, fi, fj, fk)(apply5(fa, fb, fc, fd, fe)(map(f)(ff => (a: A, b: B, c: C, d: D, e: E) => (g: G, h: H, i: I, j: J, k: K) => ff(a, b, c, d, e, g, h, i, j, k))))
 
 
 
   @noop def map2[A, B, X](fa: F[A], fb: F[B])(f: (A, B) => X): F[X] =
-    apply(fa)(map(fb)(b => (a: A) => f(a, b)))
+    apply(fb)(map(fa)(a => (b: B) => f(a, b)))
 
   @noop def map3[A, B, C, X](fa: F[A], fb: F[B], fc: F[C])(f: (A, B, C) => X): F[X] =
-    apply(fa)(map2(fb, fc)((b, c) => a => f(a, b, c)))
+    apply(fc)(map2(fa, fb)((a, b) => c => f(a, b, c)))
 
   @noop def map4[A, B, C, D, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D])(f: (A, B, C, D) => X): F[X] =
-    map2(tuple2(fa, fb), tuple2(fc, fd)) { case ((a, b), (c, d)) => f(a, b, c, d) }
+    map2(tuple2(fc, fd), tuple2(fa, fb)) { case ((c, d), (a, b)) => f(a, b, c, d) }
 
   @noop def map5[A, B, C, D, E, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E])(f: (A, B, C, D, E) => X): F[X] =
-    map2(tuple2(fa, fb), tuple3(fc, fd, fe)) { case ((a, b), (c, d, e)) => f(a, b, c, d, e) }
+    map2(tuple2(fd, fe), tuple3(fa, fb, fc)) { case ((d, e), (a, b, c)) => f(a, b, c, d, e) }
 
   @noop def map6[A, B, C, D, E, G, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G])(f: (A, B, C, D, E, G) => X): F[X] =
-    map2(tuple3(fa, fb, fc), tuple3(fd, fe, fg)) { case ((a, b, c), (d, e, g)) => f(a, b, c, d, e, g) }
+    map2(tuple3(fd, fe, fg), tuple3(fa, fb, fc)) { case ((d, e, g), (a, b, c)) => f(a, b, c, d, e, g) }
 
   @noop def map7[A, B, C, D, E, G, H, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H])(f: (A, B, C, D, E, G, H) => X): F[X] =
-    map2(tuple3(fa, fb, fc), tuple4(fd, fe, fg, fh)) { case ((a, b, c), (d, e, g, h)) => f(a, b, c, d, e, g, h) }
+    map2(tuple3(fe, fg, fh), tuple4(fa, fb, fc, fd)) { case ((e, g, h), (a, b, c, d)) => f(a, b, c, d, e, g, h) }
 
   @noop def map8[A, B, C, D, E, G, H, I, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I])(f: (A, B, C, D, E, G, H, I) => X): F[X] =
-    map2(tuple4(fa, fb, fc, fd), tuple4(fe, fg, fh, fi)) { case ((a, b, c, d), (e, g, h, i)) => f(a, b, c, d, e, g, h, i) }
+    map2(tuple4(fe, fg, fh, fi), tuple4(fa, fb, fc, fd)) { case ((e, g, h, i), (a, b, c, d)) => f(a, b, c, d, e, g, h, i) }
 
   @noop def map9[A, B, C, D, E, G, H, I, J, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I], fj: F[J])(f: (A, B, C, D, E, G, H, I, J) => X): F[X] =
-    map2(tuple4(fa, fb, fc, fd), tuple5(fe, fg, fh, fi, fj)) { case ((a, b, c, d), (e, g, h, i, j)) => f(a, b, c, d, e, g, h, i, j) }
+    map2(tuple4(fg, fh, fi, fj), tuple5(fa, fb, fc, fd, fe)) { case ((g, h, i, j), (a, b, c, d, e)) => f(a, b, c, d, e, g, h, i, j) }
 
   @noop def map10[A, B, C, D, E, G, H, I, J, K, X](fa: F[A], fb: F[B], fc: F[C], fd: F[D], fe: F[E], fg: F[G], fh: F[H], fi: F[I], fj: F[J], fk: F[K])(f: (A, B, C, D, E, G, H, I, J, K) => X): F[X] =
-    map2(tuple5(fa, fb, fc, fd, fe), tuple5(fg, fh, fi, fj, fk)) { case ((a, b, c, d, e), (g, h, i, j, k)) => f(a, b, c, d, e, g, h, i, j, k) }
+    map2(tuple5(fg, fh, fi, fj, fk), tuple5(fa, fb, fc, fd, fe)) { case ((g, h, i, j, k), (a, b, c, d, e)) => f(a, b, c, d, e, g, h, i, j, k) }
 
 
 
